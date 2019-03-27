@@ -4,9 +4,11 @@
   "description": "iReporter is an web platform that enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public and also report on things that needs government intervention.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./src/*.jsx ./src/**/*.jsx --fix",
+    "start:dev": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
   },
-  "lint": "eslint **/*.{js, jsx} --quiet",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Chrismarcel/iReporter-React.git"
@@ -30,16 +32,29 @@
   },
   "homepage": "https://github.com/Chrismarcel/iReporter-React#readme",
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
     "eslint": "^5.15.3",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-react": "^1.1.7"
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "html-webpack-plugin": "^3.2.0",
+    "prettier": "^1.16.4",
+    "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.5",
     "react": "^16.8.5",
-    "react-dom": "^16.8.5"
+    "react-dom": "^16.8.5",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
   }
 }
