@@ -1,0 +1,31 @@
+{
+  "name": "ireporter-react",
+  "version": "1.0.0",
+  "description": "iReporter is an web platform that enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public and also report on things that needs government intervention.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chrismarcel/iReporter-React.git"
+  },
+  "keywords": [
+    "Andela",
+    "Bootcamp",
+    "Corruption",
+    "Monitor",
+    "Crime",
+    "Crime",
+    "Report",
+    "API",
+    "TDD",
+    "Jest"
+  ],
+  "author": "Chrismarcel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chrismarcel/iReporter-React/issues"
+  },
+  "homepage": "https://github.com/Chrismarcel/iReporter-React#readme"
+}
