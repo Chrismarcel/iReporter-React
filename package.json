@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "lint": "eslint **/*.{js, jsx} --quiet",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Chrismarcel/iReporter-React.git"
@@ -27,5 +28,10 @@
   "bugs": {
     "url": "https://github.com/Chrismarcel/iReporter-React/issues"
   },
-  "homepage": "https://github.com/Chrismarcel/iReporter-React#readme"
+  "homepage": "https://github.com/Chrismarcel/iReporter-React#readme",
+  "devDependencies": {
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-react": "^1.1.7"
+  }
 }
