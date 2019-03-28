@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./src/*.jsx ./src/**/*.jsx --fix",
-    "start:dev": "webpack-dev-server --mode development",
+    "start:dev": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --mode production"
   },
   "repository": {
@@ -34,6 +34,7 @@
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.1",
     "eslint": "^5.15.3",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.1.0",
@@ -44,7 +45,11 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
     "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "node-sass": "^4.11.0",
     "prettier": "^1.16.4",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
     "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {

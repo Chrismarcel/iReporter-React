@@ -2,9 +2,10 @@
     "root": true,
     "extends": [
         "airbnb-base",
-        "prettier",
         "prettier/react",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "prettier",
+        "plugin:prettier/recommended"
     ],
     "plugins": [
         "prettier"
