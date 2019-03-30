@@ -1,18 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Header from './components/Header.jsx';
-import MainSection from './components/MainSection.jsx';
-import Footer from './components/Footer.jsx';
+import { BrowserRouter, Route } from 'react-router-dom';
+import LandingPage from './components/LandingPage.jsx';
 import './assets/scss/styles.scss';
 
-const LandingPage = () => {
+const App = () => {
   return (
-    <React.Fragment>
-      <Header />
-      <MainSection />
-      <Footer />
-    </React.Fragment>
+    <BrowserRouter>
+      <Route exact path="/" component={LandingPage} />
+    </BrowserRouter>
   );
 };
 
-ReactDOM.render(<LandingPage />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('app'));
