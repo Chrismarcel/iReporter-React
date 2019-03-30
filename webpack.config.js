@@ -8,7 +8,7 @@ const htmlPlugin = new HtmlWebpackPlugin({
 });
 
 const cssPlugin = new MiniCssExtractPlugin({
-  filename: './assets/style.css'
+  filename: './assets/css/style.css'
 });
 
 module.exports = {
@@ -36,10 +36,32 @@ module.exports = {
         test: /\.(scss|css|sass)$/,
         use: [
           'style-loader',
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../../'
+            }
+          },
           'css-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              name: '[name].[ext]',
+              outputPath: './assets/img/'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.html$/,
+        loader: ['html-loader']
       }
     ]
   },
