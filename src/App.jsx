@@ -1,9 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './assets/scss/style.scss';
+import { BrowserRouter, Route } from 'react-router-dom';
+import LandingPage from './components/LandingPage.jsx';
+import './assets/scss/styles.scss';
 
-const Home = () => {
-  return <div>Welcome to iReporter</div>;
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Route exact path="/" component={LandingPage} />
+    </BrowserRouter>
+  );
 };
 
-ReactDOM.render(<Home />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('app'));
