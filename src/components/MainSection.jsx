@@ -106,4 +106,5 @@ const MainSection = () => {
   );
 };
 
+export { HeroSection, HowToSection, FeaturedSection };
 export default MainSection;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, BrowserRouter as Router } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import img from '../assets/img/logo.png';
+import logo from '../assets/img/logo.png';
 
 const Logo = () => {
   return (
     <a href="./" className="navbar-logo">
-      <img className="logo" src={img} />
+      <img className="logo" src={logo} />
     </a>
   );
 };
@@ -49,4 +49,5 @@ MenuLink.propTypes = {
   linkName: PropTypes.string
 };
 
+export { Logo, Menu, MenuLink };
 export default Header;
