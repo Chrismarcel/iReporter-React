@@ -18,6 +18,9 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
   },
+  devServer: {
+    historyApiFallback: true
+  },
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.css']
   },

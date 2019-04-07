@@ -5,6 +5,8 @@
 version: 2
 jobs:
   build:
+    environment:
+      CC_TEST_REPORTER_ID: b06a9458963195e52021e06b9333948129b3b0351285f38f9d66468c0dbd4a80
     docker:
       # specify the version you desire here
       - image: circleci/node:latest
@@ -27,6 +29,10 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
+      - run: 
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
 
       - save_cache:
           paths:
@@ -35,4 +41,7 @@ jobs:
       # run tests!
       - run: 
           name: run tests
-          command: npm test
+          command: |
+            ./cc-test-reporter before-build
+            npm test
+            ./cc-test-reporter after-build --exit-code $?

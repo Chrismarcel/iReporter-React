@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import logo from '../assets/img/logo.png';
 
@@ -11,21 +11,23 @@ const Logo = () => {
   );
 };
 
-const MenuLink = props => {
-  return (
-    <li className="navbar-link" id={props.id}>
-      <Link to={props.location}>{props.linkName}</Link>
-    </li>
-  );
-};
+const MenuLink = ({ to, ...props }) => (
+  <li className="navbar-link" id={props.id}>
+    <Route path={to} exact>
+      {({ match }) => (
+        <Link to={to} replace={Boolean(match)}>
+          {props.linkName}
+        </Link>
+      )}
+    </Route>
+  </li>
+);
 
 const Menu = () => {
   return (
     <ul className="navbar-menu">
-      <Router>
-        <MenuLink id={'login'} location={'/login'} linkName={'Login'} />
-        <MenuLink id={'signup'} location={'/signup'} linkName={'Sign Up'} />
-      </Router>
+      <MenuLink to="/login" id={'login'} linkName={'Login'} />
+      <MenuLink to="/signup" id={'signup'} linkName={'Sign Up'} />
     </ul>
   );
 };
@@ -45,8 +47,9 @@ const Header = () => {
 
 MenuLink.propTypes = {
   id: PropTypes.string,
-  location: PropTypes.string,
-  linkName: PropTypes.string
+  linkName: PropTypes.string,
+  to: PropTypes.string,
+  replace: PropTypes.bool
 };
 
 export { Logo, Menu, MenuLink };
