@@ -5,36 +5,28 @@ import InputField from './FormComponents.jsx';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 import Spinner from './Spinner.jsx';
+import BASE_URL from '../config';
 
 class SignUp extends Component {
   state = {
-    username: '',
-    password: '',
-    firstname: '',
-    lastname: '',
-    othername: '',
-    email: '',
-    phonenumber: '',
-    buttonText: 'Sign Up',
-    token: ''
+    buttonText: 'Sign Up'
   };
 
   inputChangeHandler = event => {
     this.setState({
-      [event.currentTarget.id]: event.currentTarget.value
+      [event.target.name]: event.target.value
     });
   };
 
-  signUp = async event => {
+  handleSignUp = async event => {
     const { buttonText, token, ...profileDetails } = this.state;
     this.setState({
-      buttonText: 'Loading'
+      buttonText: 'Signing Up...'
     });
     event.preventDefault();
-    const baseUrl = 'http://ireporter-api.herokuapp.com/api/v1';
     const request = await axios({
       method: 'post',
-      url: `${baseUrl}/auth/register`,
+      url: `${BASE_URL}/auth/register`,
       data: profileDetails
     });
 
@@ -53,11 +45,15 @@ class SignUp extends Component {
         <main>
           <section className="container form-container section-dark">
             <h2 className="section-title">Sign Up</h2>
-            <form action="" className="form-card" method="post">
+            <form
+              onSubmit={this.handleSignUp}
+              className="form-card"
+              method="post"
+            >
               <InputField
                 forAttr={'firstname'}
                 label={'Enter First Name'}
-                type={'text'}
+                fieldType={'text'}
                 required={'*'}
                 fieldId={'firstname'}
                 fieldName={'firstname'}
@@ -67,7 +63,7 @@ class SignUp extends Component {
               <InputField
                 forAttr={'lastname'}
                 label={'Enter Last Name'}
-                type={'text'}
+                fieldType={'text'}
                 required={'*'}
                 fieldId={'lastname'}
                 fieldName={'lastname'}
@@ -77,7 +73,7 @@ class SignUp extends Component {
               <InputField
                 forAttr={'othername'}
                 label={'Enter Other Name'}
-                type={'text'}
+                fieldType={'text'}
                 required={''}
                 fieldId={'othername'}
                 fieldName={'othername'}
@@ -87,7 +83,7 @@ class SignUp extends Component {
               <InputField
                 forAttr={'username'}
                 label={'Enter Username'}
-                type={'text'}
+                fieldType={'text'}
                 required={'*'}
                 fieldId={'username'}
                 fieldName={'username'}
@@ -97,7 +93,7 @@ class SignUp extends Component {
               <InputField
                 forAttr={'email'}
                 label={'Enter Email'}
-                type={'text'}
+                fieldType={'email'}
                 required={'*'}
                 fieldId={'email'}
                 fieldName={'email'}
@@ -107,7 +103,7 @@ class SignUp extends Component {
               <InputField
                 forAttr={'phonenumber'}
                 label={'Enter Phone Number'}
-                type={'text'}
+                fieldType={'tel'}
                 required={'*'}
                 fieldId={'phonenumber'}
                 fieldName={'phonenumber'}
@@ -117,19 +113,15 @@ class SignUp extends Component {
               <InputField
                 forAttr={'password'}
                 label={'Enter Password'}
-                type={'password'}
+                fieldType={'password'}
                 required={'*'}
                 fieldId={'password'}
                 fieldName={'password'}
                 placeHolder={'Enter Password'}
                 inputChangeHandler={this.inputChangeHandler}
               />
-              <button
-                type="submit"
-                onClick={this.signUp}
-                className="btn btn-primary"
-              >
-                {this.state.buttonText === 'Loading' ? <Spinner /> : ''}
+              <button type="submit" className="btn btn-primary">
+                {this.state.buttonText === 'Signing Up...' ? <Spinner /> : ''}
                 {'  '}
                 {this.state.buttonText}
               </button>
