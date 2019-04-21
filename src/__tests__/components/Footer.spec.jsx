@@ -1,9 +1,6 @@
 import React from 'react';
-import { configure, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Footer from '../components/Footer.jsx';
-
-configure({ adapter: new Adapter() });
+import { shallow } from 'enzyme';
+import Footer from '../../components/Footer';
 
 describe('Footer component should be rendered', () => {
   const footerComponent = shallow(<Footer />);

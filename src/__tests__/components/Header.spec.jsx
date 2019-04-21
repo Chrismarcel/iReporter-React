@@ -1,10 +1,7 @@
 import React from 'react';
-import { configure, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Header, { Logo, Menu, MenuLink } from '../components/Header.jsx';
-import logo from '../assets/img/logo.png';
-
-configure({ adapter: new Adapter() });
+import { shallow } from 'enzyme';
+import Header, { Logo, Menu, MenuLink } from '../../components/Header';
+import logo from '../../assets/img/logo.png';
 
 describe('Logo component should be rendered', () => {
   const logoComponent = shallow(<Logo />);
@@ -23,9 +20,7 @@ describe('Logo component should be rendered', () => {
 });
 
 describe('Menu links component should be rendered', () => {
-  const menuLinksComponent = shallow(
-    <MenuLink id={'login'} location={'/login'} linkName={'Login'} />
-  );
+  const menuLinksComponent = shallow(<MenuLink id="login" location="/login" linkName="Login" />);
 
   it('should ensure menu links are present', () => {
     expect(menuLinksComponent.find('.navbar-link').exists()).toBe(true);

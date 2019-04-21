@@ -71,7 +71,7 @@ button {
 }
 
 a.btn {
-  padding: 12px 25px
+  padding: 12px 25px;
 }
 
 .btn-hollow {
@@ -90,12 +90,14 @@ a.btn {
   border: 2px solid #ef271b;
 }
 
-.btn-primary, .toggle-reports .btn.toggled {
+.btn-primary,
+.toggle-reports .btn.toggled {
   background: #0facf3;
   color: #fffffa;
 }
 
-.btn-white, .toggle-reports .btn {
+.btn-white,
+.toggle-reports .btn {
   background: #fffffa;
   color: #0facf3;
   border: 2px solid #fffffa;
@@ -211,7 +213,8 @@ td.comment {
   width: 30%;
 }
 
-td.time, td.serial {
+td.time,
+td.serial {
   text-align: center;
 }
 
@@ -236,11 +239,12 @@ td.time, td.serial {
   text-align: center;
   margin: 0 auto;
   position: relative;
-  margin: 0 5px
+  margin: 0 5px;
 }
 
-.divider::before, .divider::after {
-  content: '';
+.divider::before,
+.divider::after {
+  content: "";
   position: absolute;
   top: 18px;
   background: #0facf3;
@@ -256,6 +260,12 @@ td.time, td.serial {
   right: 38px;
 }
 
+.error {
+  color: #ef271b;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
 /* Navigation */
 header {
   box-shadow: rgba(31, 53, 78, 0.11) 0 1px;
@@ -405,7 +415,7 @@ section > .btn {
   background: #3c1642;
 }
 
-.section-dark .section-title, 
+.section-dark .section-title,
 .section-dark .section-text {
   color: #fffffa;
 }
@@ -423,7 +433,7 @@ section > .btn {
   margin-right: 20px;
 }
 
-.cards-list .report-card:nth-child(4n){
+.cards-list .report-card:nth-child(4n) {
   margin-right: 0;
 }
 
@@ -536,7 +546,7 @@ footer {
 }
 
 .form-group input {
-  width: 55%
+  width: 55%;
 }
 
 .form-group button {
@@ -570,7 +580,7 @@ footer {
   transform: translate(50%, 50%);
   z-index: -20;
   opacity: 0;
-  transition: opacity .5s ease-in;
+  transition: opacity 0.5s ease-in;
 }
 
 .modal.report-modal {
@@ -610,7 +620,8 @@ footer {
   margin-top: 20px;
 }
 
-.modal-body .report-time, .modal-body .report-location {
+.modal-body .report-time,
+.modal-body .report-location {
   margin-bottom: 15px;
 }
 
@@ -631,9 +642,9 @@ footer {
 
 .modal-close {
   font-size: 1.7em;
-    position: absolute;
-    right: 20px;
-    top: 5px;
+  position: absolute;
+  right: 20px;
+  top: 5px;
   cursor: pointer;
 }
 
@@ -1024,8 +1035,10 @@ tr > td:last-child {
     margin-bottom: 15px;
   }
 
-  .form-group input, #attachment, .form-group button {
-    width: 100%
+  .form-group input,
+  #attachment,
+  .form-group button {
+    width: 100%;
   }
 
   .profile-card {
@@ -1057,7 +1070,7 @@ tr > td:last-child {
   .modal {
     width: 90%;
     padding: 10px 15px 20px;
-  } 
+  }
 
   .report-modal.modal-open {
     width: 95vw;
@@ -1065,7 +1078,7 @@ tr > td:last-child {
 
   .toggle-reports {
     float: left;
-    margin: 15px 0; 
+    margin: 15px 0;
   }
 
   .modal-header {
