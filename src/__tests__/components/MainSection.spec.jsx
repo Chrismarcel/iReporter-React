@@ -1,13 +1,10 @@
 import React from 'react';
-import { configure, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { shallow } from 'enzyme';
 import MainSection, {
   HeroSection,
   HowToSection,
   FeaturedSection
-} from '../components/MainSection.jsx';
-
-configure({ adapter: new Adapter() });
+} from '../../components/MainSection';
 
 describe('Hero component should be rendered', () => {
   const heroComponent = shallow(<HeroSection />);

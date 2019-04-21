@@ -1,34 +1,56 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { string, bool, func } from 'prop-types';
 
-const InputField = props => {
+/**
+ * @method InputField
+ * @description InputField component
+ * @param {object} props React props object
+ * @returns {JSX} JSX Markup
+ */
+const InputField = (props) => {
+  const {
+    forAttr,
+    label,
+    required,
+    fieldType,
+    fieldId,
+    fieldName,
+    placeHolder,
+    inputChangeHandler
+  } = props;
   return (
     <React.Fragment>
-      <label htmlFor={props.forAttr}>
-        {props.label} <span>{props.required}</span>
+      <label htmlFor={forAttr}>
+        {label}
+        {' '}
+        <span>{required && '*'}</span>
       </label>
       <input
-        type={props.fieldType}
-        id={props.fieldId}
-        name={props.fieldName}
+        type={fieldType}
+        id={fieldId}
+        name={fieldName}
         className="form-element"
-        placeholder={props.placeHolder}
-        onChange={props.inputChangeHandler}
-        required
+        placeholder={placeHolder}
+        onChange={inputChangeHandler}
+        required={required}
       />
     </React.Fragment>
   );
 };
 
 InputField.propTypes = {
-  forAttr: PropTypes.string,
-  label: PropTypes.string,
-  fieldType: PropTypes.string,
-  required: PropTypes.string,
-  fieldId: PropTypes.string,
-  fieldName: PropTypes.string,
-  placeHolder: PropTypes.string,
-  inputChangeHandler: PropTypes.func
+  forAttr: string.isRequired,
+  label: string.isRequired,
+  fieldType: string.isRequired,
+  required: bool,
+  fieldId: string.isRequired,
+  fieldName: string.isRequired,
+  placeHolder: string.isRequired,
+  inputChangeHandler: func.isRequired
+};
+
+InputField.defaultProps = {
+  required: false
 };
 
 export default InputField;

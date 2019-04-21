@@ -1,129 +1,123 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+  func, objectOf, object, string
+} from 'prop-types';
 import 'regenerator-runtime';
-import InputField from './FormComponents.jsx';
-import Header from './Header.jsx';
-import Footer from './Footer.jsx';
-import Spinner from './Spinner.jsx';
-import BASE_URL from '../config';
+import InputField from './FormComponents';
+import Header from './Header';
+import Footer from './Footer';
+import Spinner from './Spinner';
+import { registerAction, processingRequest, clearErrors } from '../redux/actions/authActions';
 
-class SignUp extends Component {
-  state = {
-    buttonText: 'Sign Up'
-  };
-
-  inputChangeHandler = event => {
+/**
+ * @class SignUp
+ * @description SignUp component
+ * @param {object} event - Synthetic event object
+ */
+export class SignUpComponent extends Component {
+  inputChangeHandler = (event) => {
+    const { clearAuthErrors } = this.props;
+    clearAuthErrors();
     this.setState({
       [event.target.name]: event.target.value
     });
   };
 
-  handleSignUp = async event => {
-    const { buttonText, token, ...profileDetails } = this.state;
-    this.setState({
-      buttonText: 'Signing Up...'
-    });
+  handleSignUp = async (event) => {
+    const { register, displayLoader } = this.props;
     event.preventDefault();
-    const request = await axios({
-      method: 'post',
-      url: `${BASE_URL}/auth/register`,
-      data: profileDetails
-    });
-
-    const response = await request;
-    const { data } = response.data;
-
-    if (response.status === 201) {
-      localStorage.setItem('token', data[0].token);
-    }
+    displayLoader();
+    register(this.state);
   };
 
+  /**
+   * @method render
+   * @description React render method
+   * @returns {JSX} React component markup
+   */
   render() {
+    const { errors, loadingText } = this.props;
     return (
       <React.Fragment>
         <Header />
         <main>
           <section className="container form-container section-dark">
             <h2 className="section-title">Sign Up</h2>
-            <form
-              onSubmit={this.handleSignUp}
-              className="form-card"
-              method="post"
-            >
+            <form onSubmit={this.handleSignUp} className="form-card" method="post">
               <InputField
-                forAttr={'firstname'}
-                label={'Enter First Name'}
-                fieldType={'text'}
-                required={'*'}
-                fieldId={'firstname'}
-                fieldName={'firstname'}
-                placeHolder={'Enter First Name'}
+                forAttr="firstname"
+                label="Enter First Name"
+                fieldType="text"
+                required
+                fieldId="firstname"
+                fieldName="firstname"
+                placeHolder="Enter First Name"
                 inputChangeHandler={this.inputChangeHandler}
               />
               <InputField
-                forAttr={'lastname'}
-                label={'Enter Last Name'}
-                fieldType={'text'}
-                required={'*'}
-                fieldId={'lastname'}
-                fieldName={'lastname'}
-                placeHolder={'Enter Last Name'}
+                forAttr="lastname"
+                label="Enter Last Name"
+                fieldType="text"
+                required
+                fieldId="lastname"
+                fieldName="lastname"
+                placeHolder="Enter Last Name"
                 inputChangeHandler={this.inputChangeHandler}
               />
               <InputField
-                forAttr={'othername'}
-                label={'Enter Other Name'}
-                fieldType={'text'}
-                required={''}
-                fieldId={'othername'}
-                fieldName={'othername'}
-                placeHolder={'Enter Other Name'}
+                forAttr="othername"
+                label="Enter Other Name"
+                fieldType="text"
+                fieldId="othername"
+                fieldName="othername"
+                placeHolder="Enter Other Name"
                 inputChangeHandler={this.inputChangeHandler}
               />
               <InputField
-                forAttr={'username'}
-                label={'Enter Username'}
-                fieldType={'text'}
-                required={'*'}
-                fieldId={'username'}
-                fieldName={'username'}
-                placeHolder={'Enter Username'}
+                forAttr="username"
+                label="Enter Username"
+                fieldType="text"
+                required
+                fieldId="username"
+                fieldName="username"
+                placeHolder="Enter Username"
                 inputChangeHandler={this.inputChangeHandler}
               />
               <InputField
-                forAttr={'email'}
-                label={'Enter Email'}
-                fieldType={'email'}
-                required={'*'}
-                fieldId={'email'}
-                fieldName={'email'}
-                placeHolder={'Enter Email'}
+                forAttr="email"
+                label="Enter Email"
+                fieldType="email"
+                required
+                fieldId="email"
+                fieldName="email"
+                placeHolder="Enter Email"
                 inputChangeHandler={this.inputChangeHandler}
               />
               <InputField
-                forAttr={'phonenumber'}
-                label={'Enter Phone Number'}
-                fieldType={'tel'}
-                required={'*'}
-                fieldId={'phonenumber'}
-                fieldName={'phonenumber'}
-                placeHolder={'Enter Phone Number'}
+                forAttr="phonenumber"
+                label="Enter Phone Number"
+                fieldType="tel"
+                required
+                fieldId="phonenumber"
+                fieldName="phonenumber"
+                placeHolder="Enter Phone Number"
                 inputChangeHandler={this.inputChangeHandler}
               />
               <InputField
-                forAttr={'password'}
-                label={'Enter Password'}
-                fieldType={'password'}
-                required={'*'}
-                fieldId={'password'}
-                fieldName={'password'}
-                placeHolder={'Enter Password'}
+                forAttr="password"
+                label="Enter Password"
+                fieldType="password"
+                required
+                fieldId="password"
+                fieldName="password"
+                placeHolder="Enter Password"
                 inputChangeHandler={this.inputChangeHandler}
               />
+              {errors.error && <p className="error">{errors.error}</p>}
               <button type="submit" className="btn btn-primary">
-                {this.state.buttonText === 'Signing Up...' ? <Spinner /> : ''}
-                {'  '}
-                {this.state.buttonText}
+                {loadingText ? <Spinner loadingText={loadingText} /> : 'Sign Up'}
               </button>
             </form>
           </section>
@@ -134,4 +128,41 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+/**
+ * @method mapDispatchToProps
+ * @description maps redux actions to props
+ * @param {callback} dispatch destructured reducer state object
+ * @returns {object} state
+ */
+export const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    register: registerAction,
+    displayLoader: processingRequest,
+    clearAuthErrors: clearErrors
+  },
+  dispatch
+);
+
+/**
+ * @method mapStateToProps
+ * @description maps reducer states to props
+ * @param {object} * destructured reducer state object
+ * @returns {object} state
+ */
+export const mapStateToProps = ({ auth }) => {
+  const { errors, loadingText } = auth;
+  return { errors, loadingText };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUpComponent);
+
+SignUpComponent.propTypes = {
+  register: func.isRequired,
+  errors: objectOf(object).isRequired,
+  loadingText: string.isRequired,
+  displayLoader: func.isRequired,
+  clearAuthErrors: func.isRequired
+};
