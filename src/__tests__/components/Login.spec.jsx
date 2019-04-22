@@ -8,7 +8,7 @@ import reducers from '../../redux/reducers';
 import Login, { LoginComponent } from '../../components/Login';
 
 const store = createStore(reducers, applyMiddleware(ReduxPromise));
-describe('test Sign up component', () => {
+describe('test Login component', () => {
   const loginComponent = mount(
     <Provider store={store}>
       <Router>

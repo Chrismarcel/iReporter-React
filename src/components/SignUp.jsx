@@ -5,7 +5,7 @@ import {
   func, objectOf, object, string
 } from 'prop-types';
 import 'regenerator-runtime';
-import InputField from './FormComponents';
+import { InputField } from './FormComponents';
 import Header from './Header';
 import Footer from './Footer';
 import Spinner from './Spinner';
@@ -25,7 +25,7 @@ export class SignUpComponent extends Component {
     });
   };
 
-  handleSignUp = async (event) => {
+  handleSignUp = (event) => {
     const { register, displayLoader } = this.props;
     event.preventDefault();
     displayLoader();

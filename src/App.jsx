@@ -9,6 +9,7 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import reducers from './redux/reducers';
 import './assets/scss/styles.scss';
+import CreateReport from './components/CreateReport';
 
 const store = createStore(reducers, applyMiddleware(ReduxPromise));
 
@@ -24,6 +25,7 @@ const App = () => (
         <Route exact path="/" component={LandingPage} />
         <Route path="/signup" component={SignUp} />
         <Route path="/login" component={Login} />
+        <Route path="/create-report" component={CreateReport} />
       </div>
     </BrowserRouter>
   </Provider>

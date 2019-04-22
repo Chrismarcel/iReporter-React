@@ -179,6 +179,7 @@ a.btn {
 label {
   margin-bottom: 5px;
   font-weight: 600;
+  display: block;
 }
 
 label span {
@@ -248,7 +249,7 @@ td.serial {
   position: absolute;
   top: 18px;
   background: #0facf3;
-  width: 10px;
+  width: 7px;
   height: 2px;
 }
 
@@ -535,6 +536,24 @@ footer {
   font-weight: 600;
 }
 
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.upload-btn-wrapper button {
+  cursor: pointer;
+}
+
+.upload-btn-wrapper input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
 /* Form Card */
 .form-card {
   width: 45%;
@@ -543,6 +562,11 @@ footer {
   flex-direction: column;
   padding: 50px 40px;
   margin-top: 25px;
+}
+
+.form-group > div,
+.form-group > div > div {
+  display: initial;
 }
 
 .form-group input {

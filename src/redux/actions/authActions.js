@@ -6,7 +6,7 @@ import {
   LOGIN_USER,
   LOGIN_ERROR,
   PROCESSING_REQUEST,
-  CLEAR_AUTH_ERRORS
+  CLEAR_AUTH_ERROR
 } from '../actionTypes';
 
 /**
@@ -66,7 +66,7 @@ const processingRequest = () => ({
  * @returns {object} action object
  */
 const clearErrors = () => ({
-  type: CLEAR_AUTH_ERRORS
+  type: CLEAR_AUTH_ERROR
 });
 
 export {
