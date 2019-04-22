@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { string, func } from 'prop-types';
@@ -8,6 +8,8 @@ import { InputField, TextField } from './FormComponents';
 import Spinner from './Spinner';
 import { createReport, publishingReport } from '../redux/actions/reportActions';
 import HelperUtils from '../utils/HelperUtils';
+import Footer from './Footer';
+import Header from './Header';
 
 const GOOGLE_API_KEY = 'AIzaSyCpPGmgTAgtfyNnrBRzsOKmx3XfOpHxFK8';
 const CLOUDINARY_PRESET = 'nkztoivt';
@@ -102,104 +104,112 @@ export class CreateReportComponent extends Component {
     } = this.state;
 
     return (
-      <main>
-        <section className="container form-container section-dark">
-          <h2 className="section-title">Create Record</h2>
-          <form onSubmit={this.handleCreateReport} className="form-card" method="post">
-            <TextField
-              fieldId="comment"
-              fieldName="comment"
-              forAttr="comment"
-              required
-              label="Enter issue to be reported"
-              placeHolder="Enter a comment about the issue eg 'Blocked drainage system'"
-              minCharLength="20"
-              columnSize="10"
-              inputChangeHandler={this.inputChangeHandler}
-            />
-            <label htmlFor="issue">
-              Select Recorded type
-              {' '}
-              <span>*</span>
-            </label>
-            <select
-              onChange={this.inputChangeHandler}
-              type="text"
-              id="issue"
-              name="issue"
-              className="form-element"
-              required
-            >
-              <option value="red-flags">Red Flag</option>
-              <option value="interventions">Intervention</option>
-            </select>
-            <div className="form-group">
-              <ReactGoogleMapLoader
-                params={{ key: GOOGLE_API_KEY, libraries: 'places,geocode' }}
-                render={googleMaps => googleMaps && (
-                <div>
-                  <ReactGooglePlacesSuggest
-                    autocompletionRequest={{ input: search }}
-                    googleMaps={googleMaps}
-                    onSelectSuggest={this.handleSelectSuggest}
-                  >
-                    <InputField
-                      forAttr="location"
-                      label="Enter Location"
-                      fieldType="text"
-                      required
-                      fieldId="location"
-                      fieldName="location"
-                      placeHolder="Enter Location"
-                      inputChangeHandler={this.geocodeLocation}
-                      fieldValue={value}
-                    />
-                  </ReactGooglePlacesSuggest>
-                </div>
-                )
-                }
+      <Fragment>
+        <Header />
+        <main>
+          <section className="container form-container section-dark">
+            <h2 className="section-title">Create Record</h2>
+            <form onSubmit={this.handleCreateReport} className="form-card" method="post">
+              <TextField
+                fieldId="comment"
+                fieldName="comment"
+                forAttr="comment"
+                required
+                label="Enter issue to be reported"
+                placeHolder="Enter a comment about the issue eg 'Blocked drainage system'"
+                minCharLength="20"
+                columnSize="10"
+                inputChangeHandler={this.inputChangeHandler}
               />
-              <span className="divider">OR</span>
-              <button
-                onClick={this.retrieveLocation}
-                type="button"
-                className="btn btn-primary current-location"
+              <label htmlFor="issue">
+                Select Recorded type
+                {' '}
+                <span>*</span>
+              </label>
+              <select
+                onChange={this.inputChangeHandler}
+                type="text"
+                id="issue"
+                name="issue"
+                className="form-element"
+                required
               >
-                Use current location
+                <option value="red-flags">Red Flag</option>
+                <option value="interventions">Intervention</option>
+              </select>
+              <div className="form-group">
+                <ReactGoogleMapLoader
+                  params={{ key: GOOGLE_API_KEY, libraries: 'places,geocode' }}
+                  render={googleMaps => googleMaps && (
+                  <div>
+                    <ReactGooglePlacesSuggest
+                      autocompletionRequest={{ input: search }}
+                      googleMaps={googleMaps}
+                      onSelectSuggest={this.handleSelectSuggest}
+                    >
+                      <InputField
+                        forAttr="location"
+                        label="Enter Location"
+                        fieldType="text"
+                        required
+                        fieldId="location"
+                        fieldName="location"
+                        placeHolder="Enter Location"
+                        inputChangeHandler={this.geocodeLocation}
+                        fieldValue={value}
+                      />
+                    </ReactGooglePlacesSuggest>
+                  </div>
+                  )
+                  }
+                />
+                <span className="divider">OR</span>
+                <button
+                  onClick={this.retrieveLocation}
+                  type="button"
+                  className="btn btn-primary current-location"
+                >
+                  Use current location
+                </button>
+              </div>
+              <p id="coordinates" data-coordinates="">
+                {location && `Selected location coordinates are ${location}`}
+              </p>
+              <label htmlFor="attachment">Attach Image</label>
+              <div className="upload-btn-wrapper">
+                <button
+                  type="button"
+                  id="attachment"
+                  className="btn btn-primary-hollow form-element"
+                >
+                  <i className="fas fa-cloud-upload-alt" />
+                  Upload media
+                </button>
+                <input
+                  accept="image/jpeg, image/jpg, image/png"
+                  onChange={this.handleImageUpload}
+                  type="file"
+                  name="images"
+                  multiple
+                />
+              </div>
+              {selectedFile && (
+                <ul id="file-list">
+                  <li>
+                    {selectedFile}
+                    {' '}
+                    <i className="fas fa-check" />
+                  </li>
+                </ul>
+              )}
+              <button type="submit" className="btn btn-primary">
+                {loadingText ? <Spinner loadingText={loadingText} /> : 'Create Record'}
               </button>
-            </div>
-            <p id="coordinates" data-coordinates="">
-              {location && `Selected location coordinates are ${location}`}
-            </p>
-            <label htmlFor="attachment">Attach Image</label>
-            <div className="upload-btn-wrapper">
-              <button type="button" id="attachment" className="btn btn-primary-hollow form-element">
-                <i className="fas fa-cloud-upload-alt" />
-                Upload media
-              </button>
-              <input
-                accept="image/jpeg, image/jpg, image/png"
-                onChange={this.handleImageUpload}
-                type="file"
-                name="images"
-                multiple
-              />
-            </div>
-            {selectedFile && (
-              <ul id="file-list">
-                <li>
-                  {selectedFile}
-                  {' '}
-                  <i className="fas fa-check" />
-                </li>
-              </ul>
-            )}
-            <button type="submit" className="btn btn-primary">
-              {loadingText ? <Spinner loadingText={loadingText} /> : 'Create Record'}
-            </button>
-          </form>
-        </section>
-      </main>
+            </form>
+          </section>
+        </main>
+        <Footer />
+      </Fragment>
     );
   }
 }
