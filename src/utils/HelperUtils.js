@@ -1,7 +1,8 @@
 import { post } from 'axios';
 import 'regenerator-runtime';
+import dotenv from 'dotenv';
 
-const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/myopinion-ng/image/upload';
+dotenv.config();
 
 /**
  * @class HelperUtils
@@ -15,7 +16,7 @@ class HelperUtils {
    * @return {object} estimatedTime
    */
   static async uploadImage(fileData) {
-    const cloudinaryEndpoint = CLOUDINARY_URL;
+    const cloudinaryEndpoint = process.env.CLOUDINARY_URL;
     try {
       const getImage = await post(`${cloudinaryEndpoint}`, fileData, {
         headers: {
