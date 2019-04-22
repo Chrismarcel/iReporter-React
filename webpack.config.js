@@ -1,6 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
+require('dotenv').config();
 
 const htmlPlugin = new HtmlWebpackPlugin({
   template: './public/index.html',
@@ -23,6 +26,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.css']
+  },
+  node: {
+    net: 'empty',
+    fs: 'empty'
   },
   stats: {
     colors: true,
@@ -68,5 +75,14 @@ module.exports = {
       }
     ]
   },
-  plugins: [cssPlugin, htmlPlugin]
+  plugins: [
+    cssPlugin,
+    htmlPlugin,
+    new Dotenv(),
+    new webpack.DefinePlugin({
+      'process.env.GOOGLE_API_KEY': JSON.stringify(process.env.GOOGLE_API_KEY),
+      'process.env.CLOUDINARY_PRESET': JSON.stringify(process.env.CLOUDINARY_PRESET),
+      'process.env.CLOUDINARY_URL': JSON.stringify(process.env.CLOUDINARY_URL)
+    })
+  ]
 };

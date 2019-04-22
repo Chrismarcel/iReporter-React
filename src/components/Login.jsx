@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import {
   func, object, string, objectOf
 } from 'prop-types';
-import InputField from './FormComponents';
+import { InputField } from './FormComponents';
 import Header from './Header';
 import Footer from './Footer';
 import Spinner from './Spinner';
@@ -25,7 +25,7 @@ export class LoginComponent extends Component {
     });
   };
 
-  handleLogin = async (event) => {
+  handleLogin = (event) => {
     const { login, displayLoader } = this.props;
     event.preventDefault();
     displayLoader();
@@ -68,7 +68,7 @@ export class LoginComponent extends Component {
                 inputChangeHandler={this.inputChangeHandler}
               />
               <button type="submit" className="btn btn-primary">
-                {loadingText ? <Spinner loadingText={loadingText} /> : 'Sign Up'}
+                {loadingText ? <Spinner loadingText={loadingText} /> : 'Login'}
               </button>
             </form>
           </section>

@@ -4,7 +4,7 @@ import {
   LOGIN_USER,
   LOGIN_ERROR,
   PROCESSING_REQUEST,
-  CLEAR_AUTH_ERRORS
+  CLEAR_AUTH_ERROR
 } from '../actionTypes';
 
 const initialState = {
@@ -49,7 +49,7 @@ const authReducer = (state = initialState, { type, payload }) => {
         ...state,
         loadingText: 'Processing Request...'
       };
-    case CLEAR_AUTH_ERRORS:
+    case CLEAR_AUTH_ERROR:
       return {
         ...state,
         loadingText: '',
