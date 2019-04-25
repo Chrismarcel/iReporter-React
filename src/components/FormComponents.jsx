@@ -16,8 +16,7 @@ const InputField = (props) => {
     fieldId,
     fieldName,
     placeHolder,
-    inputChangeHandler,
-    fieldValue
+    inputChangeHandler
   } = props;
   return (
     <React.Fragment>
@@ -34,7 +33,6 @@ const InputField = (props) => {
         placeholder={placeHolder}
         onChange={inputChangeHandler}
         required={required}
-        value={fieldValue}
       />
     </React.Fragment>
   );
@@ -87,8 +85,7 @@ InputField.propTypes = {
   fieldId: string.isRequired,
   fieldName: string.isRequired,
   placeHolder: string.isRequired,
-  inputChangeHandler: func.isRequired,
-  fieldValue: string
+  inputChangeHandler: func.isRequired
 };
 
 TextField.propTypes = {
@@ -104,8 +101,7 @@ TextField.propTypes = {
 };
 
 InputField.defaultProps = {
-  required: false,
-  fieldValue: ''
+  required: false
 };
 
 TextField.defaultProps = {

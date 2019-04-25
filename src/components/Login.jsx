@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import 'regenerator-runtime';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-  func, object, string, objectOf
+  func, object, string, objectOf, bool
 } from 'prop-types';
 import { InputField } from './FormComponents';
 import Header from './Header';
@@ -38,9 +39,10 @@ export class LoginComponent extends Component {
    * @returns {JSX} React component markup
    */
   render() {
-    const { errors, loadingText } = this.props;
+    const { errors, loadingText, isLoggedIn } = this.props;
     return (
       <React.Fragment>
+        {isLoggedIn && <Redirect to="./dashboard" />}
         <Header />
         <main>
           <section className="container form-container section-dark">
@@ -101,10 +103,11 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
  * @returns {object} state
  */
 export const mapStateToProps = ({ auth }) => {
-  const { errors, loadingText } = auth;
+  const { errors, loadingText, isLoggedIn } = auth;
   return {
     errors,
-    loadingText
+    loadingText,
+    isLoggedIn
   };
 };
 
@@ -118,5 +121,6 @@ LoginComponent.propTypes = {
   errors: objectOf(object).isRequired,
   displayLoader: func.isRequired,
   loadingText: string.isRequired,
-  clearAuthErrors: func.isRequired
+  clearAuthErrors: func.isRequired,
+  isLoggedIn: bool.isRequired
 };

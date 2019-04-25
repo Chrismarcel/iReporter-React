@@ -8,6 +8,7 @@ import {
 } from '../actionTypes';
 
 const initialState = {
+  isLoggedIn: !!localStorage.userToken,
   userData: {},
   errors: {},
   loadingText: ''
@@ -23,6 +24,7 @@ const authReducer = (state = initialState, { type, payload }) => {
     case REGISTER_USER:
       return {
         ...state,
+        isLoggedIn: true,
         loadingText: '',
         userData: payload
       };
@@ -35,6 +37,7 @@ const authReducer = (state = initialState, { type, payload }) => {
     case LOGIN_USER:
       return {
         ...state,
+        isLoggedIn: true,
         loadingText: '',
         userData: payload
       };

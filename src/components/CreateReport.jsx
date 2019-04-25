@@ -1,11 +1,12 @@
 import React, { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { string, func } from 'prop-types';
+import { string, func, bool } from 'prop-types';
 import ReactGoogleMapLoader from 'react-google-maps-loader';
 import ReactGooglePlacesSuggest from 'react-google-places-suggest';
 import dotenv from 'dotenv';
-import { InputField, TextField } from './FormComponents';
+import { TextField } from './FormComponents';
 import Spinner from './Spinner';
 import { createReport, publishingReport } from '../redux/actions/reportActions';
 import HelperUtils from '../utils/HelperUtils';
@@ -99,12 +100,14 @@ export class CreateReportComponent extends Component {
    * @returns {JSX} JSX markup
    */
   render() {
-    const { loadingText } = this.props;
+    const { loadingText, isLoggedIn } = this.props;
     const {
       location, search, value, selectedFile
     } = this.state;
 
-    return (
+    return !isLoggedIn ? (
+      <Redirect to="./" />
+    ) : (
       <Fragment>
         <Header />
         <main>
@@ -148,16 +151,19 @@ export class CreateReportComponent extends Component {
                       googleMaps={googleMaps}
                       onSelectSuggest={this.handleSelectSuggest}
                     >
-                      <InputField
-                        forAttr="location"
-                        label="Enter Location"
-                        fieldType="text"
+                      <label htmlFor="location">
+                            Enter Location
+                        <span>*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        className="form-element"
+                        placeholder="Enter Location"
+                        onChange={this.geocodeLocation}
                         required
-                        fieldId="location"
-                        fieldName="location"
-                        placeHolder="Enter Location"
-                        inputChangeHandler={this.geocodeLocation}
-                        fieldValue={value}
+                        value={value}
                       />
                     </ReactGooglePlacesSuggest>
                   </div>
@@ -235,12 +241,14 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
  * @param {object} * destructured reducer state object
  * @returns {object} state
  */
-export const mapStateToProps = ({ report }) => {
-  const { reportData, errors, loadingText } = report;
+export const mapStateToProps = ({ reports, auth }) => {
+  const { isLoggedIn } = auth;
+  const { reportData, errors, loadingText } = reports;
   return {
     reportData,
     errors,
-    loadingText
+    loadingText,
+    isLoggedIn
   };
 };
 
@@ -252,5 +260,6 @@ export default connect(
 CreateReportComponent.propTypes = {
   createReportFn: func.isRequired,
   displayLoader: func.isRequired,
-  loadingText: string.isRequired
+  loadingText: string.isRequired,
+  isLoggedIn: bool.isRequired
 };

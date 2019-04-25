@@ -1,74 +1,56 @@
-import React from 'react';
-import { Route, Link } from 'react-router-dom';
-import { string, bool } from 'prop-types';
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { bool } from 'prop-types';
 import logo from '../assets/img/logo.png';
-
-/**
- * @method Logo
- * @description Logo component
- * @returns {JSX} JSX Markup
- */
-const Logo = () => (
-  <a href="./" className="navbar-logo">
-    <img className="logo" src={logo} alt="Logo" />
-  </a>
-);
-
-/**
- * @method MenuLink
- * @description Custom Menu links component
- * @returns {JSX} JSX Markup
- */
-const MenuLink = ({ to, ...props }) => {
-  const { id, linkName } = props;
-  return (
-    <li className="navbar-link" id={id}>
-      <Route path={to} exact>
-        {({ match }) => (
-          <Link to={to} replace={Boolean(match)}>
-            {linkName}
-          </Link>
-        )}
-      </Route>
-    </li>
-  );
-};
-
-/**
- * @method Menu
- * @description Menu component
- * @returns {JSX} JSX Markup
- */
-const Menu = () => (
-  <ul className="navbar-menu">
-    <MenuLink to="/login" id="login" linkName="Login" />
-    <MenuLink to="/signup" id="signup" linkName="Sign Up" />
-  </ul>
-);
+import MenuLink from './MenuLink';
 
 /**
  * @method Header
+ * @param {object} props React props object
  * @description Header component
  * @returns {JSX} JSX Markup
  */
-const Header = () => (
+const Header = ({ isLoggedIn }) => (
   <header>
     <nav className="navbar">
-      <Logo />
+      <a href="./" className="navbar-logo">
+        <img className="logo" src={logo} alt="Logo" />
+      </a>
       <button type="button" className="hamburger-menu">
         <span className="hamburger" />
       </button>
-      <Menu />
+      <ul className="navbar-menu">
+        {!isLoggedIn && (
+          <Fragment>
+            <MenuLink to="/login" id="login" linkName="Login" />
+            <MenuLink to="/signup" id="signup" linkName="Sign Up" />
+          </Fragment>
+        )}
+        {isLoggedIn && (
+          <Fragment>
+            <MenuLink to="/create-report" id="login" linkName="Create Report" />
+            <MenuLink to="/dashboard" id="signup" linkName="Dashboard" />
+            <MenuLink to="/logout" id="signup" linkName="Logout" />
+          </Fragment>
+        )}
+      </ul>
     </nav>
   </header>
 );
 
-MenuLink.propTypes = {
-  id: string.isRequired,
-  linkName: string.isRequired,
-  to: string.isRequired,
-  replace: bool.isRequired
+/**
+ * @method mapStateToProps
+ * @description maps reducer states to props
+ * @param {object} * destructured reducer state object
+ * @returns {object} state
+ */
+export const mapStateToProps = ({ auth }) => {
+  const { isLoggedIn } = auth;
+  return { isLoggedIn };
 };
 
-export { Logo, Menu, MenuLink };
-export default Header;
+export default connect(mapStateToProps)(Header);
+
+Header.propTypes = {
+  isLoggedIn: bool.isRequired
+};
