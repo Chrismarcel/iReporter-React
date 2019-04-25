@@ -4,6 +4,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxPromise from 'redux-promise';
+import Dashboard from './components/Dashboard';
 import LandingPage from './components/LandingPage';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
@@ -26,6 +27,7 @@ const App = () => (
         <Route path="/signup" component={SignUp} />
         <Route path="/login" component={Login} />
         <Route path="/create-report" component={CreateReport} />
+        <Route path="/dashboard" component={Dashboard} />
       </div>
     </BrowserRouter>
   </Provider>

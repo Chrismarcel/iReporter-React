@@ -30,6 +30,25 @@ class HelperUtils {
       return 'Image could not be uploaded';
     }
   }
+
+  /**
+   * @method convertUTCTOLocalTime
+   * @description Method for converting UTC to local time
+   * @param {string} timeString - Time stamp
+   * @return {object} estimatedTime
+   */
+  static convertUTCTOLocalTime(timeString) {
+    const dateObj = new Date(timeString);
+    const formattedDate = new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: 'numeric'
+    }).format(dateObj);
+
+    return formattedDate;
+  }
 }
 
 export default HelperUtils;

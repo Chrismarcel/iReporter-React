@@ -19,6 +19,14 @@ const registerAction = async (userData) => {
     const registerUser = await post(`${BASE_URL}/auth/register`, userData);
     const { data } = registerUser.data;
     localStorage.setItem('userToken', data[0].token);
+    const userDetails = data[0].user;
+    const {
+      username, email, firstname, lastname, phonenumber
+    } = userDetails;
+    localStorage.setItem('username', username);
+    localStorage.setItem('email', email);
+    localStorage.setItem('fullname', `${firstname} ${lastname}`);
+    localStorage.setItem('phonenumber', phonenumber);
     return {
       type: REGISTER_USER,
       payload: registerUser.data
@@ -41,6 +49,15 @@ const loginAction = async (userData) => {
     const loginUser = await post(`${BASE_URL}/auth/login`, userData);
     const { data } = loginUser.data;
     localStorage.setItem('userToken', data[0].token);
+    const userDetails = data[0].user;
+    const {
+      username, email, firstname, lastname, phonenumber
+    } = userDetails;
+    localStorage.setItem('username', username);
+    localStorage.setItem('email', email);
+    localStorage.setItem('fullname', `${firstname} ${lastname}`);
+    localStorage.setItem('phonenumber', phonenumber);
+
     return {
       type: LOGIN_USER,
       payload: data

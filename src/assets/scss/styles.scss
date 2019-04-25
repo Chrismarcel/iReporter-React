@@ -434,14 +434,11 @@ section > .btn {
   margin-right: 20px;
 }
 
-.cards-list .report-card:nth-child(4n) {
-  margin-right: 0;
-}
-
 .cards-list p.report-comment {
   height: 65px;
   overflow: hidden;
   margin-bottom: 5px;
+  word-break: break-word;
 }
 
 td.comment p {
@@ -464,6 +461,7 @@ td.comment p {
   top: -10px;
   color: #fffffa;
   padding: 4px 10px;
+  text-transform: capitalize;
 }
 
 .report-media {
@@ -686,6 +684,14 @@ footer {
   align-items: flex-start;
 }
 
+.profile.username {
+  text-transform: capitalize;
+}
+
+.profile.email {
+  margin-bottom: 20px;
+}
+
 .profile-card {
   background: #fffffa;
   display: flex;
@@ -701,18 +707,26 @@ footer {
   height: 200px;
   border-radius: 50%;
   margin-bottom: 20px;
+  background: #0facf3;
+}
+
+.profile-image > p {
+  text-align: center;
+  line-height: 200px;
+  font-size: 100px;
+  color: #fffffa;
 }
 
 .profile-name {
   font-size: 1.3rem;
   font-weight: 600;
+  text-transform: capitalize;
 }
 
 .profile-stats {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  display: none;
 }
 
 .stats {
@@ -855,6 +869,7 @@ tr > td:last-child {
 .user-reports .report-card {
   flex-basis: 31%;
   margin-right: 20px;
+  width: 31%;
 }
 
 .user-reports .no-reports {
@@ -1089,6 +1104,7 @@ tr > td:last-child {
 
   .cards-list > .report-card {
     margin-right: 0;
+    width: 100%;
   }
 
   .modal {
