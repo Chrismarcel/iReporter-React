@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { objectOf } from 'prop-types';
+import { objectOf, string } from 'prop-types';
 import HelperUtils from '../utils/HelperUtils';
 
 /**
@@ -50,8 +50,23 @@ const ReportCard = ({ report }) => (
   </div>
 );
 
-export default ReportCard;
+/**
+ * @method EmptyCard
+ * @description - Card component to render if there are no lists to render
+ * @returns {JSX} JSX markup
+ */
+const EmptyCard = ({ reportType }) => (
+  <div className="card report-card no-reports">
+    <p>{`You have not created any ${reportType} records`}</p>
+  </div>
+);
+
+export { ReportCard, EmptyCard };
 
 ReportCard.propTypes = {
   report: objectOf.isRequired
+};
+
+EmptyCard.propTypes = {
+  reportType: string.isRequired
 };

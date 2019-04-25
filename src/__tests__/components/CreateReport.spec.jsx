@@ -6,7 +6,12 @@ import { CreateReportComponent } from '../../components/CreateReport';
 describe('test Create Report component', () => {
   const mockFn = jest.fn();
   const createReportComponent = shallow(
-    <CreateReportComponent displayLoader={mockFn} createReportFn={mockFn} loadingText="Loading" />
+    <CreateReportComponent
+      isLoggedIn
+      displayLoader={mockFn}
+      createReportFn={mockFn}
+      loadingText="Loading"
+    />
   );
   it('should ensure that header exists', () => {
     expect(createReportComponent.find('.section-title').text()).toEqual('Create Record');

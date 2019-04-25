@@ -14,7 +14,8 @@ const initialState = {
   interventionStats: {},
   reportStatus: {},
   errors: {},
-  loadingText: ''
+  loadingText: '',
+  publishedReport: false
 };
 
 /**
@@ -23,7 +24,6 @@ const initialState = {
  * @returns {oject} the payload
  */
 const reportReducer = (state = initialState, { type, payload }) => {
-  console.log('Payload is', payload);
   switch (type) {
     case FETCH_REPORTS:
       return {
@@ -38,6 +38,7 @@ const reportReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loadingText: '',
+        publishedReport: true,
         reportData: payload
       };
     case CREATE_REPORT_ERROR:
@@ -55,7 +56,7 @@ const reportReducer = (state = initialState, { type, payload }) => {
     case PUBLISHING_REPORT:
       return {
         ...state,
-        loadingText: 'Publishing Article...'
+        loadingText: 'Publishing Report...'
       };
     case FETCHING_REPORTS:
       return {

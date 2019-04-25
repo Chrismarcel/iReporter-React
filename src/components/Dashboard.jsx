@@ -6,9 +6,7 @@ import { func, bool, objectOf } from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-import profileImg from '../assets/img/profile-pic.jpg';
-// import Spinner from './Spinner';
-import ReportCard from './ReportCard';
+import { ReportCard, EmptyCard } from './ReportCard';
 import { fetchReports } from '../redux/actions/reportActions';
 
 /**
@@ -34,11 +32,7 @@ class Dashboard extends Component {
    */
   render() {
     const {
-      isLoggedIn,
-      redFlagReports,
-      interventionReports,
-      redFlagStats,
-      interventionStats
+      isLoggedIn, redFlagReports, redFlagStats, interventionStats
     } = this.props;
     const totalStats = [redFlagStats, interventionStats].reduce(
       (defaultStats = { resolved: 0, pending: 0, rejected: 0 }, reportStat) => {
@@ -76,7 +70,9 @@ class Dashboard extends Component {
             </div>
             <div className="profile">
               <div className="card profile-card">
-                <img className="profile-image" src={profileImg} alt="Profile Display" />
+                <div className="profile-image">
+                  <p>{fullname.substr(0, 1)}</p>
+                </div>
                 <p className="profile profile-name fullname">{fullname}</p>
                 <p className="profile username">{username}</p>
                 <p className="profile phonenumber">{phonenumber}</p>
@@ -107,42 +103,12 @@ class Dashboard extends Component {
                 )}
               </div>
               <div className="user-reports">
-                <div className="column cards-list">{reportList}</div>
+                <div className="column cards-list">
+                  {redFlagReports.length > 0 ? reportList : <EmptyCard reportType="red flags" />}
+                </div>
               </div>
             </div>
           </section>
-          <div className="modal delete-modal">
-            <div className="modal-header">
-              <p className="modal-title">Delete Record</p>
-              <span className="modal-close">×</span>
-            </div>
-            <div className="modal-body">
-              <p className="toggle" />
-              <p className="modal-message">Are you sure you want to delete record?</p>
-              <div className="modal-group">
-                <button type="button" className="btn btn-primary modal-btn" id="cancel">
-                  Cancel
-                </button>
-                <button type="button" className="btn btn-warning modal-btn" id="delete">
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="modal report-modal">
-            <div className="modal-header">
-              <p className="modal-title">Report Details</p>
-              <span className="modal-close">×</span>
-            </div>
-            <div className="modal-body">
-              <p className="report-toggle" />
-              <div className="modal-group modal-images" />
-              <div className="modal-comment" />
-              <div className="map-container">
-                <div id="map" />
-              </div>
-            </div>
-          </div>
         </main>
         <Footer />
       </React.Fragment>
@@ -194,7 +160,6 @@ Dashboard.propTypes = {
   fetchReportsFn: func.isRequired,
   isLoggedIn: bool.isRequired,
   redFlagReports: objectOf.isRequired,
-  interventionReports: objectOf.isRequired,
   redFlagStats: objectOf.isRequired,
   interventionStats: objectOf.isRequired
 };

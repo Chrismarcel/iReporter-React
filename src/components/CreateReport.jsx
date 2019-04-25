@@ -100,15 +100,15 @@ export class CreateReportComponent extends Component {
    * @returns {JSX} JSX markup
    */
   render() {
-    const { loadingText, isLoggedIn } = this.props;
+    const { loadingText, isLoggedIn, publishedReport } = this.props;
     const {
       location, search, value, selectedFile
     } = this.state;
 
-    return !isLoggedIn ? (
-      <Redirect to="./" />
-    ) : (
+    return (
       <Fragment>
+        {!isLoggedIn && <Redirect to="./login" />}
+        {publishedReport && <Redirect to="./dashboard" />}
         <Header />
         <main>
           <section className="container form-container section-dark">
@@ -243,12 +243,15 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
  */
 export const mapStateToProps = ({ reports, auth }) => {
   const { isLoggedIn } = auth;
-  const { reportData, errors, loadingText } = reports;
+  const {
+    reportData, errors, loadingText, publishedReport
+  } = reports;
   return {
     reportData,
     errors,
     loadingText,
-    isLoggedIn
+    isLoggedIn,
+    publishedReport
   };
 };
 
@@ -261,5 +264,6 @@ CreateReportComponent.propTypes = {
   createReportFn: func.isRequired,
   displayLoader: func.isRequired,
   loadingText: string.isRequired,
-  isLoggedIn: bool.isRequired
+  isLoggedIn: bool.isRequired,
+  publishedReport: bool.isRequired
 };
