@@ -5,12 +5,15 @@ import {
   PUBLISHING_REPORT,
   FETCH_REPORTS_ERROR,
   FETCH_REPORTS,
+  FETCH_SINGLE_REPORT,
+  FETCH_SINGLE_REPORT_ERROR,
   UPDATE_REPORT,
   UPDATING_REPORT,
   UPDATE_REPORT_ERROR,
   DELETE_REPORT,
   DELETING_REPORT,
-  DELETE_REPORT_ERROR
+  DELETE_REPORT_ERROR,
+  FETCHING_SINGLE_REPORT
 } from '../actionTypes';
 import BASE_URL from '../../config';
 
@@ -41,6 +44,30 @@ const fetchReports = async () => {
   } catch (error) {
     return {
       type: FETCH_REPORTS_ERROR,
+      payload: error
+    };
+  }
+};
+
+/**
+ * @method fetchSingleReport
+ * @param {string} reportType
+ * @param {number} id
+ * @returns {object} action object
+ */
+const fetchSingleReport = async (reportType, id) => {
+  try {
+    const reportRequest = await get(`${BASE_URL}/${reportType}/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` }
+    });
+    const { data: report } = reportRequest;
+    return {
+      type: FETCH_SINGLE_REPORT,
+      payload: report
+    };
+  } catch (error) {
+    return {
+      type: FETCH_SINGLE_REPORT_ERROR,
       payload: error
     };
   }
@@ -177,10 +204,20 @@ const deletingReport = () => ({
   type: DELETING_REPORT
 });
 
+/**
+ * @method fetchingSingleReport
+ * @returns {object} action object
+ */
+const fetchingSingleReport = () => ({
+  type: FETCHING_SINGLE_REPORT
+});
+
 export {
   createReport,
   publishingReport,
   fetchReports,
+  fetchSingleReport,
+  fetchingSingleReport,
   updateReport,
   updatingReport,
   deleteReport,

@@ -5,6 +5,9 @@ import {
   FETCH_REPORTS,
   FETCHING_REPORTS,
   FETCH_REPORTS_ERROR,
+  FETCH_SINGLE_REPORT,
+  FETCHING_SINGLE_REPORT,
+  FETCH_SINGLE_REPORT_ERROR,
   UPDATE_REPORT,
   UPDATING_REPORT,
   DELETE_REPORT,
@@ -14,6 +17,7 @@ import {
 
 const initialState = {
   redFlagReports: [],
+  singleReport: {},
   interventionReports: [],
   redFlagStats: {},
   interventionStats: {},
@@ -22,7 +26,8 @@ const initialState = {
   loadingText: '',
   publishedReport: false,
   updatedReport: false,
-  deletedReport: false
+  deletedReport: false,
+  fetchedSingleReport: false
 };
 
 /**
@@ -42,7 +47,8 @@ const reportReducer = (state = initialState, { type, payload }) => {
         interventionStats: payload.interventionStats,
         updatedReport: false,
         deletedReport: false,
-        publishedReport: false
+        publishedReport: false,
+        fetchedSingleReport: false
       };
     case CREATE_REPORT:
       return {
@@ -94,13 +100,29 @@ const reportReducer = (state = initialState, { type, payload }) => {
     case DELETING_REPORT:
       return {
         ...state,
-
         loadingText: 'Deleting Report...'
       };
     case DELETE_REPORT_ERROR:
       return {
         ...state,
         errors: payload
+      };
+    case FETCH_SINGLE_REPORT:
+      return {
+        ...state,
+        singleReport: payload.data,
+        fetchedSingleReport: true,
+        loadingText: ''
+      };
+    case FETCH_SINGLE_REPORT_ERROR:
+      return {
+        ...state,
+        errors: payload
+      };
+    case FETCHING_SINGLE_REPORT:
+      return {
+        ...state,
+        loadingText: 'Retrieving post...'
       };
     default:
       return state;
