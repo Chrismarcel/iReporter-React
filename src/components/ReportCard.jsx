@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { objectOf, string } from 'prop-types';
+import { objectOf, string, func } from 'prop-types';
 import HelperUtils from '../utils/HelperUtils';
 
 /**
@@ -8,7 +8,7 @@ import HelperUtils from '../utils/HelperUtils';
  * @description - Card component for rendering reports
  * @returns {JSX} JSX markup
  */
-const ReportCard = ({ report }) => (
+const ReportCard = ({ report, toggleModal }) => (
   <div className="card report-card">
     <p className="report-time">
       <i className="icon icon-blue fas fa-clock" />
@@ -34,19 +34,27 @@ const ReportCard = ({ report }) => (
       {`${report.latitude}, `}
       {report.longitude}
     </p>
-    <Link to={`./edit-report/${report.type}s/${report.id}`} className="btn btn-primary edit-report">
-      <i className="icon icon-white fas fa-pen" />
-      Edit Report
-    </Link>
-    <button
-      type="button"
-      className="btn btn-warning delete-report"
-      id="delete-25"
-      data-type={report.type}
-    >
-      <i className="icon icon-white fas fa-trash-alt" />
-      Delete Report
-    </button>
+    {report.status === 'drafted' && (
+      <Link
+        to={`./edit-report/${report.type}s/${report.id}`}
+        className="btn btn-primary edit-report"
+      >
+        <i className="icon icon-white fas fa-pen" />
+        Edit Report
+      </Link>
+    )}
+    {report.status === 'drafted' && (
+      <button
+        type="button"
+        className="btn btn-warning delete-report"
+        id={report.id}
+        data-type={report.type}
+        onClick={toggleModal}
+      >
+        <i className="icon icon-white fas fa-trash-alt" />
+        Delete Report
+      </button>
+    )}
   </div>
 );
 
@@ -64,7 +72,8 @@ const EmptyCard = ({ reportType }) => (
 export { ReportCard, EmptyCard };
 
 ReportCard.propTypes = {
-  report: objectOf.isRequired
+  report: objectOf.isRequired,
+  toggleModal: func.isRequired
 };
 
 EmptyCard.propTypes = {

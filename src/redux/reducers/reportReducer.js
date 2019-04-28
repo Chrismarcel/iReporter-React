@@ -6,7 +6,10 @@ import {
   FETCHING_REPORTS,
   FETCH_REPORTS_ERROR,
   UPDATE_REPORT,
-  UPDATING_REPORT
+  UPDATING_REPORT,
+  DELETE_REPORT,
+  DELETING_REPORT,
+  DELETE_REPORT_ERROR
 } from '../actionTypes';
 
 const initialState = {
@@ -18,7 +21,8 @@ const initialState = {
   errors: {},
   loadingText: '',
   publishedReport: false,
-  updatedReport: false
+  updatedReport: false,
+  deletedReport: false
 };
 
 /**
@@ -36,7 +40,9 @@ const reportReducer = (state = initialState, { type, payload }) => {
         redFlagStats: payload.redFlagStats,
         interventionReports: payload.interventions,
         interventionStats: payload.interventionStats,
-        updatedReport: false
+        updatedReport: false,
+        deletedReport: false,
+        publishedReport: false
       };
     case CREATE_REPORT:
       return {
@@ -76,6 +82,25 @@ const reportReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loadingText: 'Updating Report...'
+      };
+    case DELETE_REPORT:
+      return {
+        ...state,
+        interventionReports: payload.interventions,
+        interventionStats: payload.interventionStats,
+        redFlagReports: payload.redFlags,
+        redFlagStats: payload.redFlagStats
+      };
+    case DELETING_REPORT:
+      return {
+        ...state,
+
+        loadingText: 'Deleting Report...'
+      };
+    case DELETE_REPORT_ERROR:
+      return {
+        ...state,
+        errors: payload
       };
     default:
       return state;

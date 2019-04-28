@@ -1,4 +1,4 @@
-import { get, post, patch } from 'axios';
+import axios, { get, post, patch } from 'axios';
 import {
   CREATE_REPORT,
   CREATE_REPORT_ERROR,
@@ -7,7 +7,10 @@ import {
   FETCH_REPORTS,
   UPDATE_REPORT,
   UPDATING_REPORT,
-  UPDATE_REPORT_ERROR
+  UPDATE_REPORT_ERROR,
+  DELETE_REPORT,
+  DELETING_REPORT,
+  DELETE_REPORT_ERROR
 } from '../actionTypes';
 import BASE_URL from '../../config';
 
@@ -125,6 +128,32 @@ const updateReport = async (reportData) => {
 };
 
 /**
+ * @method deleteReport
+ * @param {string} reportType - The report id
+ * @param {number} id - The report id
+ * @returns {object} action object
+ */
+const deleteReport = async (reportType, id) => {
+  try {
+    await axios.delete(`${BASE_URL}/${reportType}/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` }
+    });
+    const updatedReportsRequest = await fetchReports();
+    const { payload } = updatedReportsRequest;
+
+    return {
+      type: DELETE_REPORT,
+      payload
+    };
+  } catch (error) {
+    return {
+      type: DELETE_REPORT_ERROR,
+      payload: error
+    };
+  }
+};
+
+/**
  * @method publishingReport
  * @returns {object} action object
  */
@@ -140,6 +169,20 @@ const updatingReport = () => ({
   type: UPDATING_REPORT
 });
 
+/**
+ * @method deletingReport
+ * @returns {object} action object
+ */
+const deletingReport = () => ({
+  type: DELETING_REPORT
+});
+
 export {
-  createReport, publishingReport, fetchReports, updateReport, updatingReport
+  createReport,
+  publishingReport,
+  fetchReports,
+  updateReport,
+  updatingReport,
+  deleteReport,
+  deletingReport
 };

@@ -1,13 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'regenerator-runtime';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { func, bool, objectOf } from 'prop-types';
+import {
+  func, bool, objectOf, string
+} from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { ReportCard, EmptyCard } from '../components/ReportCard';
-import { fetchReports } from '../redux/actions/reportActions';
+import { fetchReports, deleteReport, deletingReport } from '../redux/actions/reportActions';
+import Modal from '../components/Modal';
+import Spinner from '../components/Spinner';
 
 /**
  * @class Dashboard
@@ -16,7 +20,10 @@ import { fetchReports } from '../redux/actions/reportActions';
  */
 export class DashboardView extends Component {
   state = {
-    reportType: 'red-flags'
+    reportType: 'red-flags',
+    modalType: '',
+    modalIsOpen: '',
+    reportId: 0
   };
 
   /**
@@ -29,6 +36,60 @@ export class DashboardView extends Component {
       fetchReportsFn();
     }
   }
+
+  toggleDeleteModal = (event) => {
+    this.setState({ reportId: event.target.id });
+    this.setState({ modalIsOpen: 'modal-open', modalType: 'delete' });
+  };
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: '', modalType: '' });
+  };
+
+  handleDeleteReport = () => {
+    const { reportId, reportType } = this.state;
+    const { deleteReportFn, deletingReportFn, fetchReportsFn } = this.props;
+    fetchReportsFn();
+    deletingReportFn();
+    deleteReportFn(reportType, reportId).then(() => {
+      this.setState({ modalIsOpen: '', modalType: '' });
+    });
+  };
+
+  displayDeleteModal = () => {
+    const { loadingText } = this.props;
+    return (
+      <Fragment>
+        <p className="modal-message">
+          {loadingText ? (
+            <Spinner loadingText={loadingText} />
+          ) : (
+            'Are you sure you want to delete record?'
+          )}
+        </p>
+        {!loadingText && (
+          <div className="modal-group">
+            <button
+              type="button"
+              onClick={this.closeModal}
+              className="btn btn-primary modal-btn"
+              id="cancel"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={this.handleDeleteReport}
+              className="btn btn-warning modal-btn"
+              id="delete"
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </Fragment>
+    );
+  };
 
   toggleReportType = (event) => {
     const { id } = event.target;
@@ -57,21 +118,33 @@ export class DashboardView extends Component {
       email, fullname, phonenumber, username
     } = userData;
 
-    const { reportType } = this.state;
+    let modalTitle;
+    let modalClass;
 
-    const totalStats = [redFlagStats, interventionStats].reduce(
-      (defaultStats = { resolved: 0, pending: 0, rejected: 0 }, reportStat) => {
-        defaultStats.resolved += reportStat.resolved;
-        defaultStats.rejected += reportStat.rejected;
-        defaultStats.pending += reportStat.pending;
+    const { reportType, modalIsOpen, modalType } = this.state;
 
-        return defaultStats;
-      }
-    );
+    if (modalType === 'delete') {
+      modalTitle = 'Delete Report';
+      modalClass = 'delete-modal';
+    } else {
+      modalTitle = 'Report Details';
+      modalClass = 'report-modal';
+    }
+
+    // Sum total reports statistics
+    const totalStats = { resolved: 0, pending: 0, rejected: 0 };
+
+    [redFlagStats, interventionStats].forEach((stat) => {
+      totalStats.resolved += stat.resolved;
+      totalStats.pending += stat.pending;
+      totalStats.rejected += stat.rejected;
+    });
 
     const reports = reportType === 'red-flags' ? redFlagReports : interventionReports;
     const reportTitle = reportType === 'red-flags' ? 'red flags' : 'interventions';
-    const reportList = reports.map(report => <ReportCard key={report.id} report={report} />);
+    const reportList = reports.map(report => (
+      <ReportCard key={report.id} toggleModal={this.toggleDeleteModal} report={report} />
+    ));
 
     return (
       <React.Fragment>
@@ -109,7 +182,7 @@ export class DashboardView extends Component {
                   <p>{fullname && fullname.substr(0, 1)}</p>
                 </div>
                 <p className="profile profile-name fullname">{fullname}</p>
-                <p className="profile username">{username}</p>
+                <p className="profile username">{`(${username})`}</p>
                 <p className="profile phonenumber">{phonenumber}</p>
                 <p className="profile email">{email}</p>
                 <p className="profile-divider">Reports Statistics</p>
@@ -142,6 +215,15 @@ export class DashboardView extends Component {
               </div>
             </div>
           </section>
+          {modalIsOpen && (
+            <Modal
+              closeModal={this.closeModal}
+              title={modalTitle}
+              modalClass={`${modalClass} ${modalIsOpen}`}
+            >
+              {modalType === 'delete' && this.displayDeleteModal()}
+            </Modal>
+          )}
         </main>
         <Footer />
       </React.Fragment>
@@ -157,7 +239,9 @@ export class DashboardView extends Component {
  */
 export const mapDispatchToProps = dispatch => bindActionCreators(
   {
-    fetchReportsFn: fetchReports
+    fetchReportsFn: fetchReports,
+    deleteReportFn: deleteReport,
+    deletingReportFn: deletingReport
   },
   dispatch
 );
@@ -170,11 +254,16 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
  */
 export const mapStateToProps = ({ auth, reports }) => {
   const {
-    errors, loadingText, isLoggedIn, userData, token
+    errors, isLoggedIn, userData, token
   } = auth;
   const {
-    redFlagReports, interventionReports, redFlagStats, interventionStats
+    redFlagReports,
+    interventionReports,
+    redFlagStats,
+    interventionStats,
+    loadingText
   } = reports;
+
   return {
     errors,
     loadingText,
@@ -196,9 +285,12 @@ export default connect(
 DashboardView.propTypes = {
   fetchReportsFn: func.isRequired,
   isLoggedIn: bool.isRequired,
+  loadingText: string.isRequired,
   redFlagReports: objectOf.isRequired,
   interventionReports: objectOf.isRequired,
   redFlagStats: objectOf.isRequired,
   interventionStats: objectOf.isRequired,
-  userData: objectOf.isRequired
+  userData: objectOf.isRequired,
+  deleteReportFn: func.isRequired,
+  deletingReportFn: func.isRequired
 };
