@@ -9,6 +9,7 @@ import LandingPage from './views/LandingPage';
 import SignUp from './views/SignUp';
 import Login from './views/Login';
 import CreateReport from './views/CreateReport';
+import EditReport from './views/EditReport';
 import reducers from './redux/reducers';
 import './assets/scss/styles.scss';
 
@@ -27,6 +28,7 @@ const App = () => (
         <Route path="/signup" component={SignUp} />
         <Route path="/login" component={Login} />
         <Route path="/create-report" component={CreateReport} />
+        <Route path="/edit-report/:reportType/:id" component={EditReport} />
         <Route path="/dashboard" component={Dashboard} />
       </div>
     </BrowserRouter>

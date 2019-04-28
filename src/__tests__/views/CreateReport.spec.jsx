@@ -14,7 +14,7 @@ describe('test Create Report component', () => {
     />
   );
   it('should ensure that header exists', () => {
-    expect(createReportComponent.find('.section-title').text()).toEqual('Create Record');
+    expect(createReportComponent.find('.section-title').text()).toEqual('Create Report');
   });
 
   it('should mock form submission with image', async () => {
