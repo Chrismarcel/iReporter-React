@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
+    "build": "rm -rf dist && webpack --mode production --env.production",
+    "serve": " npm run build && npm run start",
     "lint": "eslint ./src/*.jsx ./src/**/*.jsx --fix",
     "start:dev": "webpack-dev-server",
-    "build": "webpack --mode production"
+    "heroku-postbuild": "rm -rf dist && NPM_CONFIG_PRODUCTION=false npm run build"
   },
   "jest": {
     "moduleNameMapper": {
@@ -76,6 +78,7 @@
     "dotenv": "^7.0.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",
+    "express": "^4.16.4",
     "google-maps-react": "^2.0.2",
     "moxios": "^0.4.0",
     "prop-types": "^15.7.2",
