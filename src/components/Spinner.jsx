@@ -9,6 +9,7 @@ import { string } from 'prop-types';
 const Spinner = ({ loadingText }) => (
   <Fragment>
     <i className="fas fa-circle-notch fa-spin" />
+    {'  '}
     <span>{loadingText}</span>
   </Fragment>
 );

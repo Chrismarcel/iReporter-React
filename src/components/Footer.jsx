@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * @method Footert
+ * @method Footer
  * @description Footer component
  * @returns {JSX} JSX Markup
  */

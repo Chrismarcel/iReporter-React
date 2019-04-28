@@ -131,7 +131,7 @@ export class EditReportComponent extends Component {
                 col="10"
                 onChange={this.inputChangeHandler}
               />
-              <div className="form-group">
+              <div className="form-group" style={{ marginTop: '15px' }}>
                 <ReactGoogleMapLoader
                   params={{ key: process.env.GOOGLE_API_KEY, libraries: 'places,geocode' }}
                   render={googleMaps => googleMaps && (
@@ -141,10 +141,7 @@ export class EditReportComponent extends Component {
                       googleMaps={googleMaps}
                       onSelectSuggest={this.handleSelectSuggest}
                     >
-                      <label htmlFor="location">
-                            Update Location
-                        <span>*</span>
-                      </label>
+                      <label htmlFor="location">Update Location</label>
                       <input
                         type="text"
                         id="location"
