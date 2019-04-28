@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import ReduxPromise from 'redux-promise';
 import { BrowserRouter as Router } from 'react-router-dom';
 import reducers from '../../redux/reducers';
-import LandingPage from '../../components/LandingPage';
+import LandingPage from '../../views/LandingPage';
 
 const store = createStore(reducers, applyMiddleware(ReduxPromise));
 describe('test Landing Page component', () => {

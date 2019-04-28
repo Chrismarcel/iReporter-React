@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import ReduxPromise from 'redux-promise';
 import { BrowserRouter as Router } from 'react-router-dom';
 import reducers from '../../redux/reducers';
-import Login, { LoginComponent } from '../../components/Login';
+import Login, { LoginComponent } from '../../views/Login';
 
 const store = createStore(reducers, applyMiddleware(ReduxPromise));
 describe('test Login component', () => {

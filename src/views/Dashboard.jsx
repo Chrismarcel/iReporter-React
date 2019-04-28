@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { func, bool, objectOf } from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
-import { ReportCard, EmptyCard } from './ReportCard';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { ReportCard, EmptyCard } from '../components/ReportCard';
 import { fetchReports } from '../redux/actions/reportActions';
 
 /**
@@ -14,8 +14,13 @@ import { fetchReports } from '../redux/actions/reportActions';
  * @description Dashboard component
  * @param {object} event - Synthetic event object
  */
-class Dashboard extends Component {
+export class DashboardView extends Component {
+  state = {
+    reportType: 'red-flags'
+  };
+
   /**
+   * @method componentDidMount
    * @returns {undefined}
    */
   componentDidMount() {
@@ -25,6 +30,14 @@ class Dashboard extends Component {
     }
   }
 
+  toggleReportType = (event) => {
+    const { id } = event.target;
+    this.setState({ reportType: id });
+
+    const { fetchReportsFn } = this.props;
+    fetchReportsFn();
+  };
+
   /**
    * @method render
    * @description React render method
@@ -32,8 +45,20 @@ class Dashboard extends Component {
    */
   render() {
     const {
-      isLoggedIn, redFlagReports, redFlagStats, interventionStats
+      isLoggedIn,
+      redFlagReports,
+      interventionReports,
+      redFlagStats,
+      interventionStats,
+      userData
     } = this.props;
+
+    const {
+      email, fullname, phonenumber, username
+    } = userData;
+
+    const { reportType } = this.state;
+
     const totalStats = [redFlagStats, interventionStats].reduce(
       (defaultStats = { resolved: 0, pending: 0, rejected: 0 }, reportStat) => {
         defaultStats.resolved += reportStat.resolved;
@@ -44,10 +69,10 @@ class Dashboard extends Component {
       }
     );
 
-    const reportList = redFlagReports.map(report => <ReportCard key={report.id} report={report} />);
-    const {
-      email, fullname, username, phonenumber
-    } = localStorage;
+    const reports = reportType === 'red-flags' ? redFlagReports : interventionReports;
+    const reportTitle = reportType === 'red-flags' ? 'red flags' : 'interventions';
+    const reportList = reports.map(report => <ReportCard key={report.id} report={report} />);
+
     return (
       <React.Fragment>
         {!isLoggedIn && <Redirect to="./login" />}
@@ -57,54 +82,62 @@ class Dashboard extends Component {
             <div className="container-header">
               <h2 className="section-title">Dashboard</h2>
               <div className="toggle-reports">
-                <button type="button" id="red-flags" className="btn toggled">
+                <button
+                  type="button"
+                  onClick={this.toggleReportType}
+                  id="red-flags"
+                  className={`btn ${reportType === 'red-flags' ? 'toggled' : ''}`}
+                >
                   Red-flags
                 </button>
-                <button type="button" id="interventions" className="btn">
+                <button
+                  onClick={this.toggleReportType}
+                  type="button"
+                  id="interventions"
+                  className={`btn ${reportType === 'interventions' ? 'toggled' : ''}`}
+                >
                   Interventions
                 </button>
               </div>
             </div>
             <div className="report-type">
-              <h2>Displaying red-flags records</h2>
+              <h2>{`Displaying ${reportTitle} reports`}</h2>
             </div>
             <div className="profile">
               <div className="card profile-card">
                 <div className="profile-image">
-                  <p>{fullname.substr(0, 1)}</p>
+                  <p>{fullname && fullname.substr(0, 1)}</p>
                 </div>
                 <p className="profile profile-name fullname">{fullname}</p>
                 <p className="profile username">{username}</p>
                 <p className="profile phonenumber">{phonenumber}</p>
                 <p className="profile email">{email}</p>
-                <p className="profile-divider">Records Statistics</p>
+                <p className="profile-divider">Reports Statistics</p>
                 <p className="stat-toggle" />
-                {redFlagReports.length > 0 && (
-                  <div className="profile-stats">
-                    <div className="stats">
-                      <p className="stat-value" id="resolved">
-                        {totalStats.resolved}
-                      </p>
-                      <span className="stat-type">Resolved</span>
-                    </div>
-                    <div className="stats">
-                      <p className="stat-value" id="pending">
-                        {totalStats.pending}
-                      </p>
-                      <span className="stat-type">Pending</span>
-                    </div>
-                    <div className="stats">
-                      <p className="stat-value" id="rejected">
-                        {totalStats.rejected}
-                      </p>
-                      <span className="stat-type">Rejected</span>
-                    </div>
+                <div className="profile-stats">
+                  <div className="stats">
+                    <p className="stat-value" id="resolved">
+                      {totalStats.resolved || 0}
+                    </p>
+                    <span className="stat-type">Resolved</span>
                   </div>
-                )}
+                  <div className="stats">
+                    <p className="stat-value" id="pending">
+                      {totalStats.pending || 0}
+                    </p>
+                    <span className="stat-type">Pending</span>
+                  </div>
+                  <div className="stats">
+                    <p className="stat-value" id="rejected">
+                      {totalStats.rejected || 0}
+                    </p>
+                    <span className="stat-type">Rejected</span>
+                  </div>
+                </div>
               </div>
               <div className="user-reports">
                 <div className="column cards-list">
-                  {redFlagReports.length > 0 ? reportList : <EmptyCard reportType="red flags" />}
+                  {reportList.length > 0 ? reportList : <EmptyCard reportType={reportTitle} />}
                 </div>
               </div>
             </div>
@@ -136,7 +169,9 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
  * @returns {object} state
  */
 export const mapStateToProps = ({ auth, reports }) => {
-  const { errors, loadingText, isLoggedIn } = auth;
+  const {
+    errors, loadingText, isLoggedIn, userData, token
+  } = auth;
   const {
     redFlagReports, interventionReports, redFlagStats, interventionStats
   } = reports;
@@ -147,19 +182,23 @@ export const mapStateToProps = ({ auth, reports }) => {
     redFlagStats,
     interventionReports,
     interventionStats,
-    isLoggedIn
+    isLoggedIn,
+    userData,
+    token
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Dashboard);
+)(DashboardView);
 
-Dashboard.propTypes = {
+DashboardView.propTypes = {
   fetchReportsFn: func.isRequired,
   isLoggedIn: bool.isRequired,
   redFlagReports: objectOf.isRequired,
+  interventionReports: objectOf.isRequired,
   redFlagStats: objectOf.isRequired,
-  interventionStats: objectOf.isRequired
+  interventionStats: objectOf.isRequired,
+  userData: objectOf.isRequired
 };

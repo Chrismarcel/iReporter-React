@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import ReduxPromise from 'redux-promise';
 import { BrowserRouter as Router } from 'react-router-dom';
 import reducers from '../../redux/reducers';
-import SignUp, { SignUpComponent } from '../../components/SignUp';
+import SignUp, { SignUpComponent } from '../../views/SignUp';
 
 const store = createStore(reducers, applyMiddleware(ReduxPromise));
 describe('test Sign up component', () => {

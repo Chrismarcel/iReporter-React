@@ -6,10 +6,10 @@ import {
   func, objectOf, object, string, bool
 } from 'prop-types';
 import 'regenerator-runtime';
-import { InputField } from './FormComponents';
-import Header from './Header';
-import Footer from './Footer';
-import Spinner from './Spinner';
+import { InputField } from '../components/FormComponents';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Spinner from '../components/Spinner';
 import { registerAction, processingRequest, clearErrors } from '../redux/actions/authActions';
 
 /**

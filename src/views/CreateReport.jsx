@@ -6,12 +6,12 @@ import { string, func, bool } from 'prop-types';
 import ReactGoogleMapLoader from 'react-google-maps-loader';
 import ReactGooglePlacesSuggest from 'react-google-places-suggest';
 import dotenv from 'dotenv';
-import { TextField } from './FormComponents';
-import Spinner from './Spinner';
+import { TextField } from '../components/FormComponents';
+import Spinner from '../components/Spinner';
 import { createReport, publishingReport } from '../redux/actions/reportActions';
 import HelperUtils from '../utils/HelperUtils';
-import Footer from './Footer';
-import Header from './Header';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 dotenv.config();
 
