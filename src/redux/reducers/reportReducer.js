@@ -4,7 +4,9 @@ import {
   PUBLISHING_REPORT,
   FETCH_REPORTS,
   FETCHING_REPORTS,
-  FETCH_REPORTS_ERROR
+  FETCH_REPORTS_ERROR,
+  UPDATE_REPORT,
+  UPDATING_REPORT
 } from '../actionTypes';
 
 const initialState = {
@@ -15,7 +17,8 @@ const initialState = {
   reportStatus: {},
   errors: {},
   loadingText: '',
-  publishedReport: false
+  publishedReport: false,
+  updatedReport: false
 };
 
 /**
@@ -32,7 +35,8 @@ const reportReducer = (state = initialState, { type, payload }) => {
         redFlagReports: payload.redFlags,
         redFlagStats: payload.redFlagStats,
         interventionReports: payload.interventions,
-        interventionStats: payload.interventionStats
+        interventionStats: payload.interventionStats,
+        updatedReport: false
       };
     case CREATE_REPORT:
       return {
@@ -62,6 +66,16 @@ const reportReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loadingText: 'Fetching Reports...'
+      };
+    case UPDATE_REPORT:
+      return {
+        ...state,
+        updatedReport: true
+      };
+    case UPDATING_REPORT:
+      return {
+        ...state,
+        loadingText: 'Updating Report...'
       };
     default:
       return state;

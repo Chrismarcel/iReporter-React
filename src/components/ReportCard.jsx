@@ -34,15 +34,15 @@ const ReportCard = ({ report }) => (
       {`${report.latitude}, `}
       {report.longitude}
     </p>
-    <a href="./edit-report.html?type=red-flags&amp;id=25" className="btn btn-primary edit-report">
+    <Link to={`./edit-report/${report.type}s/${report.id}`} className="btn btn-primary edit-report">
       <i className="icon icon-white fas fa-pen" />
       Edit Report
-    </a>
+    </Link>
     <button
       type="button"
       className="btn btn-warning delete-report"
       id="delete-25"
-      data-type="red-flag"
+      data-type={report.type}
     >
       <i className="icon icon-white fas fa-trash-alt" />
       Delete Report

@@ -1,10 +1,13 @@
-import { get, post } from 'axios';
+import { get, post, patch } from 'axios';
 import {
   CREATE_REPORT,
   CREATE_REPORT_ERROR,
   PUBLISHING_REPORT,
   FETCH_REPORTS_ERROR,
-  FETCH_REPORTS
+  FETCH_REPORTS,
+  UPDATE_REPORT,
+  UPDATING_REPORT,
+  UPDATE_REPORT_ERROR
 } from '../actionTypes';
 import BASE_URL from '../../config';
 
@@ -75,6 +78,53 @@ const createReport = async (reportData) => {
 };
 
 /**
+ * @method updateReport
+ * @param {object} reportData
+ * @returns {object} action object
+ */
+const updateReport = async (reportData) => {
+  const {
+    reportType, id, comment, location
+  } = reportData;
+  const coordinates = location.split(',');
+  const latitude = coordinates[0].trim();
+  const longitude = coordinates[1].trim();
+  try {
+    const updateCommentRequest = await patch(
+      `${BASE_URL}/${reportType}/${id}/comment`,
+      {
+        comment
+      },
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` }
+      }
+    );
+    const updateLocationRequest = await patch(
+      `${BASE_URL}/${reportType}/${id}/location`,
+      { latitude, longitude },
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` }
+      }
+    );
+
+    const result = {
+      commentResponse: updateCommentRequest.data,
+      locationResponse: updateLocationRequest.data
+    };
+
+    return {
+      type: UPDATE_REPORT,
+      payload: result
+    };
+  } catch (error) {
+    return {
+      type: UPDATE_REPORT_ERROR,
+      payload: error
+    };
+  }
+};
+
+/**
  * @method publishingReport
  * @returns {object} action object
  */
@@ -82,4 +132,14 @@ const publishingReport = () => ({
   type: PUBLISHING_REPORT
 });
 
-export { createReport, publishingReport, fetchReports };
+/**
+ * @method updatingReport
+ * @returns {object} action object
+ */
+const updatingReport = () => ({
+  type: UPDATING_REPORT
+});
+
+export {
+  createReport, publishingReport, fetchReports, updateReport, updatingReport
+};
