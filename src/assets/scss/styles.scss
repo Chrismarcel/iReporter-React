@@ -647,6 +647,12 @@ footer {
   margin-bottom: 15px;
 }
 
+.report-location {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .modal-message {
   font-size: 1.2em;
   text-align: center;

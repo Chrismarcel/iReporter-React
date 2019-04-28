@@ -12,6 +12,7 @@ describe('test Dashboard component', () => {
       redFlagReports={[]}
       interventionReports={[]}
       fetchReportsFn={jest.fn()}
+      singleReport={{ id: 3, comment: 'This is a test comment' }}
       userData={{
         email: 'mockemail@gmail.com',
         username: 'MockUsername',

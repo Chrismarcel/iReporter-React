@@ -18,7 +18,13 @@ const ReportCard = ({ report, toggleModal }) => (
     <p data-type="red-flag" data-id="25" className="report-comment">
       {report.comment}
     </p>
-    <Link to={`./report/${report.id}`} className="expand-report">
+    <Link
+      to={`./aricles/${report.type}s/${report.id}`}
+      id={report.id}
+      onClick={toggleModal}
+      className="expand-report"
+      data-type="report"
+    >
       See more details
     </Link>
     <div className="report-media">
@@ -36,6 +42,7 @@ const ReportCard = ({ report, toggleModal }) => (
     </p>
     {report.status === 'drafted' && (
       <Link
+        id={report.id}
         to={`./edit-report/${report.type}s/${report.id}`}
         className="btn btn-primary edit-report"
       >
@@ -48,7 +55,7 @@ const ReportCard = ({ report, toggleModal }) => (
         type="button"
         className="btn btn-warning delete-report"
         id={report.id}
-        data-type={report.type}
+        data-type="delete"
         onClick={toggleModal}
       >
         <i className="icon icon-white fas fa-trash-alt" />

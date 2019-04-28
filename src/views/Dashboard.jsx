@@ -9,9 +9,17 @@ import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { ReportCard, EmptyCard } from '../components/ReportCard';
-import { fetchReports, deleteReport, deletingReport } from '../redux/actions/reportActions';
+import {
+  fetchReports,
+  deleteReport,
+  deletingReport,
+  fetchSingleReport,
+  fetchingSingleReport
+} from '../redux/actions/reportActions';
 import Modal from '../components/Modal';
 import Spinner from '../components/Spinner';
+import HelperUtils from '../utils/HelperUtils';
+import MapComponent from '../components/MapComponent';
 
 /**
  * @class Dashboard
@@ -37,13 +45,14 @@ export class DashboardView extends Component {
     }
   }
 
-  toggleDeleteModal = (event) => {
-    this.setState({ reportId: event.target.id });
-    this.setState({ modalIsOpen: 'modal-open', modalType: 'delete' });
+  toggleModal = (event) => {
+    event.preventDefault();
+    const modalType = event.target.dataset.type;
+    this.setState({ reportId: event.target.id, modalIsOpen: 'modal-open', modalType });
   };
 
   closeModal = () => {
-    this.setState({ modalIsOpen: '', modalType: '' });
+    this.setState({ modalIsOpen: '', modalType: '', reportFetched: false });
   };
 
   handleDeleteReport = () => {
@@ -54,6 +63,59 @@ export class DashboardView extends Component {
     deleteReportFn(reportType, reportId).then(() => {
       this.setState({ modalIsOpen: '', modalType: '' });
     });
+  };
+
+  // Retrieve single report content from the network
+  handleFetchSingleReport = () => {
+    const { fetchSingleReportFn, fetchingSingleReportFn } = this.props;
+    const { reportType, reportId } = this.state;
+    fetchingSingleReportFn();
+    fetchSingleReportFn(reportType, reportId).then(() => {
+      this.setState({ reportFetched: true });
+    });
+  };
+
+  // Display contents of the modal
+  displaySingleReport = () => {
+    const { singleReport, loadingText } = this.props;
+    return (
+      <div className="modal-body">
+        {loadingText && <Spinner loadingText={loadingText} />}
+        {singleReport.images[0] && !loadingText && (
+          <div className="modal-group modal-images">
+            <img
+              src={`https://res.cloudinary.com/myopinion-ng/image/upload/v1548601936/iReporter/${
+                singleReport.images[0]
+              }`}
+              alt="Report thumbnail"
+            />
+          </div>
+        )}
+
+        {!loadingText && (
+          <Fragment>
+            <div className="modal-comment">
+              <p>{singleReport.comment}</p>
+            </div>
+            <p className="report-time">
+              <i className="icon icon-blue fas fa-clock" />
+              {' '}
+              {HelperUtils.convertUTCTOLocalTime(singleReport.createdat)}
+            </p>
+            <p className="report-location">
+              <i className="icon icon-blue fas fa-map-marker-alt" />
+              {' '}
+              {`${singleReport.latitude}, ${singleReport.longitude}`}
+            </p>
+            <div className="map-container">
+              <div id="map">
+                <MapComponent lat={singleReport.latitude} lng={singleReport.longitude} />
+              </div>
+            </div>
+          </Fragment>
+        )}
+      </div>
+    );
   };
 
   displayDeleteModal = () => {
@@ -110,6 +172,7 @@ export class DashboardView extends Component {
       redFlagReports,
       interventionReports,
       redFlagStats,
+      singleReport,
       interventionStats,
       userData
     } = this.props;
@@ -121,7 +184,9 @@ export class DashboardView extends Component {
     let modalTitle;
     let modalClass;
 
-    const { reportType, modalIsOpen, modalType } = this.state;
+    const {
+      reportType, modalIsOpen, modalType, reportFetched
+    } = this.state;
 
     if (modalType === 'delete') {
       modalTitle = 'Delete Report';
@@ -134,6 +199,9 @@ export class DashboardView extends Component {
     // Sum total reports statistics
     const totalStats = { resolved: 0, pending: 0, rejected: 0 };
 
+    // Check if single report modal is open and report has been fetched
+    const reportModalIsOpen = Object.keys(singleReport).length > 0;
+
     [redFlagStats, interventionStats].forEach((stat) => {
       totalStats.resolved += stat.resolved;
       totalStats.pending += stat.pending;
@@ -143,7 +211,7 @@ export class DashboardView extends Component {
     const reports = reportType === 'red-flags' ? redFlagReports : interventionReports;
     const reportTitle = reportType === 'red-flags' ? 'red flags' : 'interventions';
     const reportList = reports.map(report => (
-      <ReportCard key={report.id} toggleModal={this.toggleDeleteModal} report={report} />
+      <ReportCard key={report.id} toggleModal={this.toggleModal} report={report} />
     ));
 
     return (
@@ -222,6 +290,8 @@ export class DashboardView extends Component {
               modalClass={`${modalClass} ${modalIsOpen}`}
             >
               {modalType === 'delete' && this.displayDeleteModal()}
+              {modalType === 'report' && !reportFetched && this.handleFetchSingleReport()}
+              {reportModalIsOpen && modalType === 'report' && this.displaySingleReport()}
             </Modal>
           )}
         </main>
@@ -241,7 +311,9 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
   {
     fetchReportsFn: fetchReports,
     deleteReportFn: deleteReport,
-    deletingReportFn: deletingReport
+    deletingReportFn: deletingReport,
+    fetchSingleReportFn: fetchSingleReport,
+    fetchingSingleReportFn: fetchingSingleReport
   },
   dispatch
 );
@@ -260,6 +332,7 @@ export const mapStateToProps = ({ auth, reports }) => {
     redFlagReports,
     interventionReports,
     redFlagStats,
+    singleReport,
     interventionStats,
     loadingText
   } = reports;
@@ -273,6 +346,7 @@ export const mapStateToProps = ({ auth, reports }) => {
     interventionStats,
     isLoggedIn,
     userData,
+    singleReport,
     token
   };
 };
@@ -292,5 +366,8 @@ DashboardView.propTypes = {
   interventionStats: objectOf.isRequired,
   userData: objectOf.isRequired,
   deleteReportFn: func.isRequired,
-  deletingReportFn: func.isRequired
+  deletingReportFn: func.isRequired,
+  fetchSingleReportFn: func.isRequired,
+  fetchingSingleReportFn: func.isRequired,
+  singleReport: objectOf.isRequired
 };
