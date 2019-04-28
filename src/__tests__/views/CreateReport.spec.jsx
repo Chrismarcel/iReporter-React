@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import 'regenerator-runtime';
-import { CreateReportComponent } from '../../components/CreateReport';
+import { CreateReportComponent } from '../../views/CreateReport';
 
 describe('test Create Report component', () => {
   const mockFn = jest.fn();

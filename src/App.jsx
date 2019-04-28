@@ -4,13 +4,13 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxPromise from 'redux-promise';
-import Dashboard from './components/Dashboard';
-import LandingPage from './components/LandingPage';
-import SignUp from './components/SignUp';
-import Login from './components/Login';
+import Dashboard from './views/Dashboard';
+import LandingPage from './views/LandingPage';
+import SignUp from './views/SignUp';
+import Login from './views/Login';
+import CreateReport from './views/CreateReport';
 import reducers from './redux/reducers';
 import './assets/scss/styles.scss';
-import CreateReport from './components/CreateReport';
 
 const store = createStore(reducers, applyMiddleware(ReduxPromise));
 

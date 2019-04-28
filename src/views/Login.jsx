@@ -6,10 +6,10 @@ import { bindActionCreators } from 'redux';
 import {
   func, object, string, objectOf, bool
 } from 'prop-types';
-import { InputField } from './FormComponents';
-import Header from './Header';
-import Footer from './Footer';
-import Spinner from './Spinner';
+import { InputField } from '../components/FormComponents';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Spinner from '../components/Spinner';
 import { loginAction, processingRequest, clearErrors } from '../redux/actions/authActions';
 
 /**

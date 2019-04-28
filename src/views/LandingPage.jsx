@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from './Header';
-import MainSection from './MainSection';
-import Footer from './Footer';
+import Header from '../components/Header';
+import MainSection from '../components/MainSection';
+import Footer from '../components/Footer';
 
 /**
  * @method LandingPage

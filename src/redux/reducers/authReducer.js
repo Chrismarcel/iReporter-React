@@ -9,7 +9,13 @@ import {
 
 const initialState = {
   isLoggedIn: !!localStorage.userToken,
-  userData: {},
+  userData: {
+    email: localStorage.email || '',
+    username: localStorage.username || '',
+    phonenumber: localStorage.phonenumber || '',
+    fullname: localStorage.fullname || ''
+  },
+  token: localStorage.userToken || '',
   errors: {},
   loadingText: ''
 };
@@ -26,7 +32,8 @@ const authReducer = (state = initialState, { type, payload }) => {
         ...state,
         isLoggedIn: true,
         loadingText: '',
-        userData: payload
+        userData: payload.user,
+        token: payload.token
       };
     case REGISTER_ERROR:
       return {
@@ -39,7 +46,8 @@ const authReducer = (state = initialState, { type, payload }) => {
         ...state,
         isLoggedIn: true,
         loadingText: '',
-        userData: payload
+        userData: payload.user,
+        token: payload.token
       };
     case LOGIN_ERROR:
       return {
