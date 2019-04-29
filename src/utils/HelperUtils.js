@@ -62,6 +62,7 @@ class HelperUtils {
       const payload = verify(token, process.env.SECRET_KEY);
       return payload;
     } catch (error) {
+      console.log(error);
       return false;
     }
   }
