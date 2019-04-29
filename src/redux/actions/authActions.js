@@ -67,7 +67,7 @@ const loginAction = async (userData) => {
 
     return {
       type: LOGIN_USER,
-      payload: { ...userDetails, token, isAdmin }
+      payload: { ...userDetails, token }
     };
   } catch (error) {
     return {
