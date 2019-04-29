@@ -60,8 +60,10 @@ class HelperUtils {
   static verifyToken(token) {
     try {
       const payload = verify(token, process.env.SECRET_KEY);
+      console.log(token, process.env.SECRET_KEY);
       return payload;
     } catch (error) {
+      console.log(error);
       return false;
     }
   }
