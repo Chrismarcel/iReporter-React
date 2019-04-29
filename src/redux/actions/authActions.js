@@ -71,9 +71,10 @@ const loginAction = async (userData) => {
       payload: { ...userDetails, token, isAdmin }
     };
   } catch (error) {
+    console.log(error);
     return {
       type: LOGIN_ERROR,
-      payload: error.response.data
+      payload: error
     };
   }
 };
