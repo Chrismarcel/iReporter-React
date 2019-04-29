@@ -64,7 +64,7 @@ const loginAction = async (userData) => {
     localStorage.setItem('fullname', `${firstname} ${lastname}`);
     localStorage.setItem('phonenumber', phonenumber);
     localStorage.setItem('userToken', token);
-    const isAdmin = JSON.parse(HelperUtils.verifyToken(token).isadmin);
+    const isAdmin = HelperUtils.verifyToken(token).isadmin;
     console.log('Is admin is', HelperUtils.verifyToken(token));
 
     return {
