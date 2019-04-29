@@ -14,7 +14,9 @@ import {
   DELETE_REPORT,
   DELETING_REPORT,
   DELETE_REPORT_ERROR,
-  FETCHING_SINGLE_REPORT
+  FETCHING_SINGLE_REPORT,
+  UPDATE_STATUS,
+  UPDATE_STATUS_ERROR
 } from '../actionTypes';
 import BASE_URL from '../../config';
 
@@ -182,6 +184,38 @@ const deleteReport = async (reportType, id) => {
 };
 
 /**
+ * @method updateReportStatus
+ * @param {string} reportType - The report id
+ * @param {number} id - The report id
+ * @param {string} status - The status the report should be updated to
+ * @returns {object} action object
+ */
+const updateReportStatus = async (reportType, id, status) => {
+  try {
+    await axios.patch(
+      `${BASE_URL}/${reportType}/${id}/status`,
+      { status },
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` }
+      }
+    );
+
+    const updatedReportsRequest = await fetchReports();
+    const { payload } = updatedReportsRequest;
+
+    return {
+      type: UPDATE_STATUS,
+      payload
+    };
+  } catch (error) {
+    return {
+      type: UPDATE_STATUS_ERROR,
+      payload: error
+    };
+  }
+};
+
+/**
  * @method publishingReport
  * @returns {object} action object
  */
@@ -231,5 +265,6 @@ export {
   updateReport,
   updatingReport,
   deleteReport,
-  deletingReport
+  deletingReport,
+  updateReportStatus
 };

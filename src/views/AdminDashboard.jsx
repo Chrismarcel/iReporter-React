@@ -8,7 +8,7 @@ import {
 import { Link, Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { fetchReports, fetchingReports } from '../redux/actions/reportActions';
+import { fetchReports, fetchingReports, updateReportStatus } from '../redux/actions/reportActions';
 import HelperUtils from '../utils/HelperUtils';
 import Spinner from '../components/Spinner';
 
@@ -42,6 +42,18 @@ class AdminDashboard extends Component {
 
     const { fetchReportsFn } = this.props;
     fetchReportsFn();
+  };
+
+  updateReportStatus = (event) => {
+    event.preventDefault();
+    const { updateReportStatusFn } = this.props;
+    const { reportType, status, reportId } = this.state;
+    updateReportStatusFn(reportType, reportId, status);
+  };
+
+  handleStatusChange = (event) => {
+    const reportId = event.target.dataset.id;
+    this.setState({ [event.target.name]: event.target.value, reportId });
   };
 
   /**
@@ -89,17 +101,32 @@ class AdminDashboard extends Component {
         </td>
         <td className="time">{HelperUtils.convertUTCTOLocalTime(report.createdat)}</td>
         <td>
-          <form>
-            <select className="form-element">
-              <option value="drafted">Drafted</option>
-              <option value="investigating">Investigating</option>
-              <option value="resolved">Resolved</option>
-              <option value="rejected">Rejected</option>
+          <form onSubmit={this.updateReportStatus}>
+            <select
+              name="status"
+              className="form-element"
+              data-id={report.id}
+              onChange={this.handleStatusChange}
+            >
+              <option value="drafted" selected={report.status === 'drafted' && 'selected'}>
+                Drafted
+              </option>
+              <option
+                value="investigating"
+                selected={report.status === 'investigating' && 'selected'}
+              >
+                Investigating
+              </option>
+              <option value="resolved" selected={report.status === 'resolved' && 'selected'}>
+                Resolved
+              </option>
+              <option value="rejected" selected={report.status === 'rejected' && 'selected'}>
+                Rejected
+              </option>
             </select>
             <button
               type="submit"
               className="btn btn-primary update-record"
-              data-id={report.id}
               data-type={report.reportType}
             >
               Update
@@ -159,24 +186,20 @@ class AdminDashboard extends Component {
             </div>
             <div className="dashboard">
               <div className="admin-table">
-                <table className="stats-table">
-                  <tbody>
-                    <tr>
-                      <th>S/N</th>
-                      <th>Comment</th>
-                      <th>Date Reported</th>
-                      <th>Change Status</th>
-                    </tr>
-                    {loadingText && (
+                {loadingText && <Spinner loadingText={loadingText || 'Fetching Reports...'} />}
+                {!loadingText && (
+                  <table className="stats-table">
+                    <tbody>
                       <tr>
-                        <td className="loading">
-                          <Spinner loadingText={loadingText} />
-                        </td>
+                        <th>S/N</th>
+                        <th>Comment</th>
+                        <th>Date Reported</th>
+                        <th>Change Status</th>
                       </tr>
-                    )}
-                    {!loadingText && reportTable}
-                  </tbody>
-                </table>
+                      {reportTable}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           </section>
@@ -194,7 +217,11 @@ class AdminDashboard extends Component {
  * @returns {object} state
  */
 export const mapDispatchToProps = dispatch => bindActionCreators(
-  { fetchReportsFn: fetchReports, fetchingReportsFn: fetchingReports },
+  {
+    fetchReportsFn: fetchReports,
+    fetchingReportsFn: fetchingReports,
+    updateReportStatusFn: updateReportStatus
+  },
   dispatch
 );
 
@@ -233,6 +260,7 @@ export default connect(
 AdminDashboard.propTypes = {
   fetchReportsFn: func.isRequired,
   fetchingReportsFn: func.isRequired,
+  updateReportStatusFn: func.isRequired,
   isLoggedIn: bool.isRequired,
   isAdmin: bool.isRequired,
   interventionStats: objectOf.isRequired,
