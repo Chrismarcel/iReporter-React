@@ -25,7 +25,7 @@ class Header extends Component {
    * @returns {JSX} React component markup
    */
   render() {
-    const { isLoggedIn } = this.props;
+    const { isLoggedIn, isAdmin } = this.props;
     return (
       <header>
         <nav className="navbar">
@@ -42,17 +42,24 @@ class Header extends Component {
                 <MenuLink to="/signup" id="signup" linkName="Sign Up" />
               </Fragment>
             )}
-            {isLoggedIn && (
+            {isLoggedIn && !isAdmin && (
               <Fragment>
                 <MenuLink to="/create-report" id="login" linkName="Create Report" />
                 <MenuLink to="/dashboard" id="signup" linkName="Dashboard" />
-                <MenuLink
-                  to="/logout"
-                  id="signup"
-                  linkName="Logout"
-                  handleClick={this.handleUserLogout}
-                />
               </Fragment>
+            )}
+            {isLoggedIn && isAdmin && (
+              <Fragment>
+                <MenuLink to="/admin" id="signup" linkName="Admin" />
+              </Fragment>
+            )}
+            {isLoggedIn && (
+              <MenuLink
+                to="/logout"
+                id="signup"
+                linkName="Logout"
+                handleClick={this.handleUserLogout}
+              />
             )}
           </ul>
         </nav>
@@ -68,8 +75,8 @@ class Header extends Component {
  * @returns {object} state
  */
 export const mapStateToProps = ({ auth }) => {
-  const { isLoggedIn } = auth;
-  return { isLoggedIn };
+  const { isLoggedIn, isAdmin } = auth;
+  return { isLoggedIn, isAdmin };
 };
 
 /**
@@ -91,5 +98,6 @@ export default connect(
 
 Header.propTypes = {
   isLoggedIn: bool.isRequired,
+  isAdmin: bool.isRequired,
   logoutUserFn: func.isRequired
 };

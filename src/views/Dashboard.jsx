@@ -169,6 +169,7 @@ export class DashboardView extends Component {
   render() {
     const {
       isLoggedIn,
+      isAdmin,
       redFlagReports,
       interventionReports,
       redFlagStats,
@@ -199,14 +200,14 @@ export class DashboardView extends Component {
     // Sum total reports statistics
     const totalStats = { resolved: 0, pending: 0, rejected: 0 };
 
-    // Check if single report modal is open and report has been fetched
-    const reportModalIsOpen = Object.keys(singleReport).length > 0;
-
     [redFlagStats, interventionStats].forEach((stat) => {
       totalStats.resolved += stat.resolved;
       totalStats.pending += stat.pending;
       totalStats.rejected += stat.rejected;
     });
+
+    // Check if single report modal is open and report has been fetched
+    const reportModalIsOpen = Object.keys(singleReport).length > 0;
 
     const reports = reportType === 'red-flags' ? redFlagReports : interventionReports;
     const reportTitle = reportType === 'red-flags' ? 'red flags' : 'interventions';
@@ -217,6 +218,7 @@ export class DashboardView extends Component {
     return (
       <React.Fragment>
         {!isLoggedIn && <Redirect to="./login" />}
+        {isAdmin && <Redirect to="./admin" />}
         <Header />
         <main>
           <section className="container reports-container">
@@ -326,7 +328,7 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
  */
 export const mapStateToProps = ({ auth, reports }) => {
   const {
-    errors, isLoggedIn, userData, token
+    errors, isLoggedIn, isAdmin, userData, token
   } = auth;
   const {
     redFlagReports,
@@ -345,6 +347,7 @@ export const mapStateToProps = ({ auth, reports }) => {
     interventionReports,
     interventionStats,
     isLoggedIn,
+    isAdmin,
     userData,
     singleReport,
     token
@@ -359,6 +362,7 @@ export default connect(
 DashboardView.propTypes = {
   fetchReportsFn: func.isRequired,
   isLoggedIn: bool.isRequired,
+  isAdmin: bool.isRequired,
   loadingText: string.isRequired,
   redFlagReports: objectOf.isRequired,
   interventionReports: objectOf.isRequired,
