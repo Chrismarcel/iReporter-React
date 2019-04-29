@@ -53,7 +53,6 @@ const loginAction = async (userData) => {
   try {
     const loginUser = await post(`${BASE_URL}/auth/login`, userData);
     const { data } = loginUser.data;
-    console.log(loginUser);
     const userDetails = data[0].user;
     const {
       username, email, firstname, lastname, phonenumber
@@ -64,23 +63,16 @@ const loginAction = async (userData) => {
     localStorage.setItem('fullname', `${firstname} ${lastname}`);
     localStorage.setItem('phonenumber', phonenumber);
     localStorage.setItem('userToken', token);
-    const isAdmin = HelperUtils.verifyToken(localStorage.userToken).isadmin;
-    console.log(
-      'Is admin is',
-      HelperUtils.verifyToken(localStorage.userToken),
-      HelperUtils.verifyToken(localStorage.userToken).isadmin,
-      typeof HelperUtils.verifyToken(localStorage.userToken).isadmin
-    );
+    const isAdmin = JSON.parse(HelperUtils.verifyToken(localStorage.userToken).isadmin);
 
     return {
       type: LOGIN_USER,
       payload: { ...userDetails, token, isAdmin }
     };
   } catch (error) {
-    console.log('I came into error', error);
     return {
       type: LOGIN_ERROR,
-      payload: error
+      payload: error.response.data
     };
   }
 };
