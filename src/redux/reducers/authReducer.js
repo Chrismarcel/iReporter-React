@@ -51,7 +51,6 @@ const authReducer = (state = initialState, { type, payload }) => {
         errors: payload
       };
     case LOGIN_USER:
-      console.log(payload);
       return {
         ...state,
         isLoggedIn: true,

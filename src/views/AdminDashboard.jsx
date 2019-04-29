@@ -1,15 +1,12 @@
+/* eslint-disable max-len */
 import React, { Component, Fragment } from 'react';
 import 'regenerator-runtime';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  func, bool, objectOf, string
-} from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import { func, bool, objectOf } from 'prop-types';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { fetchReports } from '../redux/actions/reportActions';
-import Spinner from '../components/Spinner';
 
 /**
  * @class AdminDashboard
