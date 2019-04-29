@@ -53,6 +53,7 @@ const loginAction = async (userData) => {
   try {
     const loginUser = await post(`${BASE_URL}/auth/login`, userData);
     const { data } = loginUser.data;
+    console.log(loginUser);
     const userDetails = data[0].user;
     const {
       username, email, firstname, lastname, phonenumber
