@@ -64,11 +64,12 @@ const loginAction = async (userData) => {
     localStorage.setItem('fullname', `${firstname} ${lastname}`);
     localStorage.setItem('phonenumber', phonenumber);
     localStorage.setItem('userToken', token);
-    const isAdmin = HelperUtils.verifyToken(token).isadmin;
+    const isAdmin = HelperUtils.verifyToken(localStorage.userToken).isadmin;
     console.log(
       'Is admin is',
-      HelperUtils.verifyToken(token).isadmin,
-      typeof HelperUtils.verifyToken(token).isadmin
+      HelperUtils.verifyToken(localStorage.userToken),
+      HelperUtils.verifyToken(localStorage.userToken).isadmin,
+      typeof HelperUtils.verifyToken(localStorage.userToken).isadmin
     );
 
     return {
