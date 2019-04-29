@@ -63,11 +63,11 @@ const loginAction = async (userData) => {
     localStorage.setItem('fullname', `${firstname} ${lastname}`);
     localStorage.setItem('phonenumber', phonenumber);
     localStorage.setItem('userToken', token);
-    // const isAdmin = JSON.parse(HelperUtils.verifyToken(localStorage.userToken).isadmin);
+    const isAdmin = JSON.parse(HelperUtils.verifyToken(localStorage.userToken).isadmin);
 
     return {
       type: LOGIN_USER,
-      payload: { ...userDetails, token }
+      payload: { ...userDetails, token, isAdmin }
     };
   } catch (error) {
     return {
