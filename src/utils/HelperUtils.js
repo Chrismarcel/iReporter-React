@@ -1,6 +1,7 @@
 import { post } from 'axios';
 import 'regenerator-runtime';
 import dotenv from 'dotenv';
+import { verify } from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -48,6 +49,21 @@ class HelperUtils {
     }).format(dateObj);
 
     return formattedDate;
+  }
+
+  /**
+   * @method verifyToken
+   * @description Method for verifying token
+   * @param {string} token - Token
+   * @return {boolean} Valid token or not
+   */
+  static verifyToken(token) {
+    try {
+      const payload = verify(token, process.env.SECRET_KEY);
+      return payload;
+    } catch (error) {
+      return false;
+    }
   }
 }
 

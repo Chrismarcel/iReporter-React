@@ -8,6 +8,8 @@ import {
   LOGOUT_USER
 } from '../actionTypes';
 
+import HelperUtils from '../../utils/HelperUtils';
+
 const initialState = {
   isLoggedIn: !!localStorage.userToken,
   userData: {
@@ -18,7 +20,8 @@ const initialState = {
   },
   token: localStorage.userToken || '',
   errors: {},
-  loadingText: ''
+  loadingText: '',
+  isAdmin: HelperUtils.verifyToken(localStorage.userToken).isadmin
 };
 
 /**
@@ -48,6 +51,7 @@ const authReducer = (state = initialState, { type, payload }) => {
         errors: payload
       };
     case LOGIN_USER:
+      console.log(payload);
       return {
         ...state,
         isLoggedIn: true,
