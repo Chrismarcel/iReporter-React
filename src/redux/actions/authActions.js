@@ -1,5 +1,6 @@
 import { post } from 'axios';
 import BASE_URL from '../../config';
+import 'regenerator-runtime';
 import {
   REGISTER_USER,
   REGISTER_ERROR,

@@ -2,7 +2,6 @@ import React, { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
 import { bool, func } from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { Redirect } from 'react-router-dom';
 import logo from '../assets/img/logo.png';
 import MenuLink from './MenuLink';
 import { logoutUser } from '../redux/actions/authActions';
