@@ -6,7 +6,8 @@ import {
   LOGIN_USER,
   LOGIN_ERROR,
   PROCESSING_REQUEST,
-  CLEAR_AUTH_ERROR
+  CLEAR_AUTH_ERROR,
+  LOGOUT_USER
 } from '../actionTypes';
 
 /**
@@ -29,7 +30,7 @@ const registerAction = async (userData) => {
     localStorage.setItem('phonenumber', phonenumber);
     return {
       type: REGISTER_USER,
-      payload: registerUser.data
+      payload: userDetails
     };
   } catch (error) {
     return {
@@ -60,7 +61,7 @@ const loginAction = async (userData) => {
 
     return {
       type: LOGIN_USER,
-      payload: data
+      payload: userDetails
     };
   } catch (error) {
     return {
@@ -86,6 +87,17 @@ const clearErrors = () => ({
   type: CLEAR_AUTH_ERROR
 });
 
+/**
+ * @method logoutUser
+ * @returns {object} action object
+ */
+const logoutUser = () => {
+  localStorage.clear();
+  return {
+    type: LOGOUT_USER
+  };
+};
+
 export {
-  registerAction, loginAction, processingRequest, clearErrors
+  registerAction, loginAction, processingRequest, clearErrors, logoutUser
 };

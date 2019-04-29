@@ -4,7 +4,8 @@ import {
   LOGIN_USER,
   LOGIN_ERROR,
   PROCESSING_REQUEST,
-  CLEAR_AUTH_ERROR
+  CLEAR_AUTH_ERROR,
+  LOGOUT_USER
 } from '../actionTypes';
 
 const initialState = {
@@ -32,7 +33,12 @@ const authReducer = (state = initialState, { type, payload }) => {
         ...state,
         isLoggedIn: true,
         loadingText: '',
-        userData: payload.user,
+        userData: {
+          email: payload.email,
+          username: payload.username,
+          phonenumber: payload.phonenumber,
+          fullname: `${payload.firstname} ${payload.lastname}`
+        },
         token: payload.token
       };
     case REGISTER_ERROR:
@@ -46,7 +52,12 @@ const authReducer = (state = initialState, { type, payload }) => {
         ...state,
         isLoggedIn: true,
         loadingText: '',
-        userData: payload.user,
+        userData: {
+          email: payload.email,
+          username: payload.username,
+          phonenumber: payload.phonenumber,
+          fullname: `${payload.firstname} ${payload.lastname}`
+        },
         token: payload.token
       };
     case LOGIN_ERROR:
@@ -65,6 +76,11 @@ const authReducer = (state = initialState, { type, payload }) => {
         ...state,
         loadingText: '',
         errors: {}
+      };
+    case LOGOUT_USER:
+      return {
+        ...state,
+        isLoggedIn: false
       };
     default:
       return state;
