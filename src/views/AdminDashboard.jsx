@@ -1,14 +1,16 @@
-/* eslint-disable max-len */
 import React, { Component, Fragment } from 'react';
 import 'regenerator-runtime';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { func, bool, objectOf } from 'prop-types';
+import {
+  func, bool, objectOf, string
+} from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { fetchReports } from '../redux/actions/reportActions';
+import { fetchReports, fetchingReports } from '../redux/actions/reportActions';
 import HelperUtils from '../utils/HelperUtils';
+import Spinner from '../components/Spinner';
 
 /**
  * @class AdminDashboard
@@ -25,11 +27,22 @@ class AdminDashboard extends Component {
    * @returns {undefined}
    */
   componentDidMount() {
-    const { fetchReportsFn, isAdmin, isLoggedIn } = this.props;
+    const {
+      fetchReportsFn, fetchingReportsFn, isAdmin, isLoggedIn
+    } = this.props;
     if (isLoggedIn && isAdmin) {
+      fetchingReportsFn();
       fetchReportsFn();
     }
   }
+
+  toggleReportType = (event) => {
+    const { id } = event.target;
+    this.setState({ reportType: id });
+
+    const { fetchReportsFn } = this.props;
+    fetchReportsFn();
+  };
 
   /**
    * @method render
@@ -43,7 +56,8 @@ class AdminDashboard extends Component {
       isAdmin,
       isLoggedIn,
       redFlagReports,
-      interventionReports
+      interventionReports,
+      loadingText
     } = this.props;
 
     const { reportType } = this.state;
@@ -97,17 +111,27 @@ class AdminDashboard extends Component {
 
     return (
       <Fragment>
-        {!isLoggedIn && !isAdmin && <Redirect to="./login" />}
         <Header />
+        {!isLoggedIn && !isAdmin && <Redirect to="./login" />}
         <main>
           <section className="container">
             <div className="container-header">
               <h2 className="section-title">Admin Dashboard</h2>
               <div className="toggle-reports">
-                <button type="button" id="red-flags" className="btn toggled">
+                <button
+                  onClick={this.toggleReportType}
+                  type="button"
+                  id="red-flags"
+                  className={`btn ${reportType === 'red-flags' ? 'toggled' : ''}`}
+                >
                   Red-flags
                 </button>
-                <button type="button" id="interventions" className="btn">
+                <button
+                  onClick={this.toggleReportType}
+                  type="button"
+                  id="interventions"
+                  className={`btn ${reportType === 'interventions' ? 'toggled' : ''}`}
+                >
                   Interventions
                 </button>
               </div>
@@ -143,7 +167,14 @@ class AdminDashboard extends Component {
                       <th>Date Reported</th>
                       <th>Change Status</th>
                     </tr>
-                    {reportTable}
+                    {loadingText && (
+                      <tr>
+                        <td className="loading">
+                          <Spinner loadingText={loadingText} />
+                        </td>
+                      </tr>
+                    )}
+                    {!loadingText && reportTable}
                   </tbody>
                 </table>
               </div>
@@ -162,7 +193,10 @@ class AdminDashboard extends Component {
  * @param {callback} dispatch destructured reducer state object
  * @returns {object} state
  */
-export const mapDispatchToProps = dispatch => bindActionCreators({ fetchReportsFn: fetchReports }, dispatch);
+export const mapDispatchToProps = dispatch => bindActionCreators(
+  { fetchReportsFn: fetchReports, fetchingReportsFn: fetchingReports },
+  dispatch
+);
 
 /**
  * @method mapStateToProps
@@ -173,7 +207,11 @@ export const mapDispatchToProps = dispatch => bindActionCreators({ fetchReportsF
 export const mapStateToProps = ({ auth, reports }) => {
   const { isLoggedIn, isAdmin } = auth;
   const {
-    redFlagReports, interventionReports, redFlagStats, interventionStats
+    redFlagReports,
+    interventionReports,
+    redFlagStats,
+    interventionStats,
+    loadingText
   } = reports;
 
   return {
@@ -182,7 +220,8 @@ export const mapStateToProps = ({ auth, reports }) => {
     redFlagReports,
     redFlagStats,
     interventionReports,
-    interventionStats
+    interventionStats,
+    loadingText
   };
 };
 
@@ -193,10 +232,12 @@ export default connect(
 
 AdminDashboard.propTypes = {
   fetchReportsFn: func.isRequired,
+  fetchingReportsFn: func.isRequired,
   isLoggedIn: bool.isRequired,
   isAdmin: bool.isRequired,
   interventionStats: objectOf.isRequired,
   redFlagStats: objectOf.isRequired,
   interventionReports: objectOf.isRequired,
-  redFlagReports: objectOf.isRequired
+  redFlagReports: objectOf.isRequired,
+  loadingText: string.isRequired
 };

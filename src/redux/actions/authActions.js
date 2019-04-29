@@ -11,6 +11,8 @@ import {
   LOGOUT_USER
 } from '../actionTypes';
 
+import HelperUtils from '../../utils/HelperUtils';
+
 /**
  * @method registerAction
  * @param {object} userData
@@ -20,7 +22,7 @@ const registerAction = async (userData) => {
   try {
     const registerUser = await post(`${BASE_URL}/auth/register`, userData);
     const { data } = registerUser.data;
-    localStorage.setItem('userToken', data[0].token);
+    const { token } = data[0];
     const userDetails = data[0].user;
     const {
       username, email, firstname, lastname, phonenumber
@@ -29,9 +31,10 @@ const registerAction = async (userData) => {
     localStorage.setItem('email', email);
     localStorage.setItem('fullname', `${firstname} ${lastname}`);
     localStorage.setItem('phonenumber', phonenumber);
+    localStorage.setItem('userToken', token);
     return {
       type: REGISTER_USER,
-      payload: userDetails
+      payload: { ...userDetails, token }
     };
   } catch (error) {
     return {
@@ -50,19 +53,21 @@ const loginAction = async (userData) => {
   try {
     const loginUser = await post(`${BASE_URL}/auth/login`, userData);
     const { data } = loginUser.data;
-    localStorage.setItem('userToken', data[0].token);
     const userDetails = data[0].user;
     const {
       username, email, firstname, lastname, phonenumber
     } = userDetails;
+    const { token } = data[0];
     localStorage.setItem('username', username);
     localStorage.setItem('email', email);
     localStorage.setItem('fullname', `${firstname} ${lastname}`);
     localStorage.setItem('phonenumber', phonenumber);
+    localStorage.setItem('userToken', token);
+    const isAdmin = JSON.parse(HelperUtils.verifyToken(localStorage.userToken).isadmin);
 
     return {
       type: LOGIN_USER,
-      payload: userDetails
+      payload: { ...userDetails, token, isAdmin }
     };
   } catch (error) {
     return {

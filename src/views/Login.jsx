@@ -39,10 +39,13 @@ export class LoginComponent extends Component {
    * @returns {JSX} React component markup
    */
   render() {
-    const { errors, loadingText, isLoggedIn } = this.props;
+    const {
+      errors, loadingText, isLoggedIn, isAdmin
+    } = this.props;
     return (
       <React.Fragment>
-        {isLoggedIn && <Redirect to="./dashboard" />}
+        {isLoggedIn && !isAdmin && <Redirect to="./dashboard" />}
+        {isLoggedIn && isAdmin && <Redirect to="./admin" />}
         <Header />
         <main>
           <section className="container form-container section-dark">
@@ -103,11 +106,14 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
  * @returns {object} state
  */
 export const mapStateToProps = ({ auth }) => {
-  const { errors, loadingText, isLoggedIn } = auth;
+  const {
+    errors, loadingText, isLoggedIn, isAdmin
+  } = auth;
   return {
     errors,
     loadingText,
-    isLoggedIn
+    isLoggedIn,
+    isAdmin
   };
 };
 
@@ -122,5 +128,6 @@ LoginComponent.propTypes = {
   displayLoader: func.isRequired,
   loadingText: string.isRequired,
   clearAuthErrors: func.isRequired,
-  isLoggedIn: bool.isRequired
+  isLoggedIn: bool.isRequired,
+  isAdmin: bool.isRequired
 };

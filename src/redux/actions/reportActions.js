@@ -5,6 +5,7 @@ import {
   PUBLISHING_REPORT,
   FETCH_REPORTS_ERROR,
   FETCH_REPORTS,
+  FETCHING_REPORTS,
   FETCH_SINGLE_REPORT,
   FETCH_SINGLE_REPORT_ERROR,
   UPDATE_REPORT,
@@ -189,6 +190,14 @@ const publishingReport = () => ({
 });
 
 /**
+ * @method fetchingReports
+ * @returns {object} action object
+ */
+const fetchingReports = () => ({
+  type: FETCHING_REPORTS
+});
+
+/**
  * @method updatingReport
  * @returns {object} action object
  */
@@ -216,6 +225,7 @@ export {
   createReport,
   publishingReport,
   fetchReports,
+  fetchingReports,
   fetchSingleReport,
   fetchingSingleReport,
   updateReport,

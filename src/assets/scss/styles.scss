@@ -204,6 +204,10 @@ tr td:first-child {
   border-right: 1px solid #dddddd;
 }
 
+td.loading {
+  width: 100%;
+}
+
 td .form-element {
   margin-bottom: 0;
   margin-right: 10px;
@@ -218,6 +222,10 @@ th {
 td.comment {
   width: 50%;
   padding: 15px 30px;
+}
+
+td.loader {
+  width: 100%;
 }
 
 td.time,
@@ -837,7 +845,7 @@ div.report-type {
   display: flex;
   justify-content: space-between;
   background: #fffffa;
-  padding: 25px;
+  padding: 25px 50px;
   margin-top: 20px;
   border-left: 3px solid #0facf3;
 }
