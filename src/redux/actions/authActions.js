@@ -64,15 +64,15 @@ const loginAction = async (userData) => {
     localStorage.setItem('fullname', `${firstname} ${lastname}`);
     localStorage.setItem('phonenumber', phonenumber);
     localStorage.setItem('userToken', token);
-    const isAdmin = JSON.parse(HelperUtils.verifyToken(localStorage.userToken).isadmin);
-    console.log(HelperUtils.verifyToken(localStorage.userToken));
+    const isAdmin = JSON.parse(HelperUtils.verifyToken(token).isadmin);
+    console.log('Is admin is', HelperUtils.verifyToken(token));
 
     return {
       type: LOGIN_USER,
       payload: { ...userDetails, token, isAdmin }
     };
   } catch (error) {
-    console.log(error);
+    console.log('I came into error', error);
     return {
       type: LOGIN_ERROR,
       payload: error
