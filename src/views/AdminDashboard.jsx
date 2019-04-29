@@ -4,9 +4,11 @@ import 'regenerator-runtime';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { func, bool, objectOf } from 'prop-types';
+import { Link, Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { fetchReports } from '../redux/actions/reportActions';
+import HelperUtils from '../utils/HelperUtils';
 
 /**
  * @class AdminDashboard
@@ -14,6 +16,10 @@ import { fetchReports } from '../redux/actions/reportActions';
  * @param {object} event - Synthetic event object
  */
 class AdminDashboard extends Component {
+  state = {
+    reportType: 'red-flags'
+  };
+
   /**
    * @method componentDidMount
    * @returns {undefined}
@@ -31,7 +37,19 @@ class AdminDashboard extends Component {
    * @returns {JSX} React component markup
    */
   render() {
-    const { interventionStats, redFlagStats } = this.props;
+    const {
+      interventionStats,
+      redFlagStats,
+      isAdmin,
+      isLoggedIn,
+      redFlagReports,
+      interventionReports
+    } = this.props;
+
+    const { reportType } = this.state;
+
+    const reports = reportType === 'red-flags' ? redFlagReports : interventionReports;
+    const reportTitle = reportType === 'red-flags' ? 'red flags' : 'interventions';
 
     // Sum total reports statistics
     const totalStats = { resolved: 0, pending: 0, rejected: 0 };
@@ -44,8 +62,42 @@ class AdminDashboard extends Component {
 
     const totalReports = totalStats.rejected + totalStats.pending + totalStats.resolved;
 
+    const reportTable = reports.map((report, index) => (
+      <tr key={report.id}>
+        <td className="serial">{index + 1}</td>
+        <td className="comment">
+          <p data-type="red-flag" data-id={report.id}>
+            {report.comment}
+          </p>
+          <Link to="./articles/report-type/id" className="expand-report">
+            View Details
+          </Link>
+        </td>
+        <td className="time">{HelperUtils.convertUTCTOLocalTime(report.createdat)}</td>
+        <td>
+          <form>
+            <select className="form-element">
+              <option value="drafted">Drafted</option>
+              <option value="investigating">Investigating</option>
+              <option value="resolved">Resolved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <button
+              type="submit"
+              className="btn btn-primary update-record"
+              data-id={report.id}
+              data-type={report.reportType}
+            >
+              Update
+            </button>
+          </form>
+        </td>
+      </tr>
+    ));
+
     return (
       <Fragment>
+        {!isLoggedIn && !isAdmin && <Redirect to="./login" />}
         <Header />
         <main>
           <section className="container">
@@ -61,7 +113,7 @@ class AdminDashboard extends Component {
               </div>
             </div>
             <div className="report-type">
-              <h2>Displaying all red-flags records</h2>
+              <h2>{`Displaying all ${reportTitle} records`}</h2>
             </div>
             <div className="admin-report">
               <div className="report-stat">
@@ -91,6 +143,7 @@ class AdminDashboard extends Component {
                       <th>Date Reported</th>
                       <th>Change Status</th>
                     </tr>
+                    {reportTable}
                   </tbody>
                 </table>
               </div>
@@ -143,5 +196,7 @@ AdminDashboard.propTypes = {
   isLoggedIn: bool.isRequired,
   isAdmin: bool.isRequired,
   interventionStats: objectOf.isRequired,
-  redFlagStats: objectOf.isRequired
+  redFlagStats: objectOf.isRequired,
+  interventionReports: objectOf.isRequired,
+  redFlagReports: objectOf.isRequired
 };
