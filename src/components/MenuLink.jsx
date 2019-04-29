@@ -29,5 +29,9 @@ MenuLink.propTypes = {
   linkName: string.isRequired,
   to: string.isRequired,
   replace: bool.isRequired,
-  handleClick: func.isRequired
+  handleClick: func
+};
+
+MenuLink.defaultProps = {
+  handleClick: () => {}
 };

@@ -12,7 +12,10 @@ import {
   UPDATING_REPORT,
   DELETE_REPORT,
   DELETING_REPORT,
-  DELETE_REPORT_ERROR
+  DELETE_REPORT_ERROR,
+  UPDATE_STATUS,
+  UPDATE_STATUS_ERROR,
+  UPDATING_STATUS
 } from '../actionTypes';
 
 const initialState = {
@@ -123,6 +126,23 @@ const reportReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loadingText: 'Retrieving post...'
+      };
+    case UPDATE_STATUS:
+      return {
+        ...state,
+        loadingText: '',
+        interventionStats: payload.interventionStats,
+        redFlagStats: payload.redFlagStats
+      };
+    case UPDATING_STATUS:
+      return {
+        ...state,
+        loadingText: 'Updating Status...'
+      };
+    case UPDATE_STATUS_ERROR:
+      return {
+        ...state,
+        errors: payload
       };
     default:
       return state;

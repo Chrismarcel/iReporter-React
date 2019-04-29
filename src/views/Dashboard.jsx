@@ -282,9 +282,10 @@ export class DashboardView extends Component {
                 </div>
               </div>
               <div className="user-reports">
-                {loadingText && <Spinner loadingText={loadingText} />}
                 <div className="column cards-list">
-                  {reportList.length > 0 ? reportList : <EmptyCard reportType={reportTitle} />}
+                  {loadingText && <Spinner loadingText={loadingText} />}
+                  {reportList.length > 0 && !loadingText && reportList}
+                  {reportList.length < 1 && !loadingText && <EmptyCard reportType={reportTitle} />}
                 </div>
               </div>
             </div>
