@@ -11,6 +11,7 @@ import Footer from '../components/Footer';
 import { ReportCard, EmptyCard } from '../components/ReportCard';
 import {
   fetchReports,
+  fetchingReports,
   deleteReport,
   deletingReport,
   fetchSingleReport,
@@ -39,8 +40,9 @@ export class DashboardView extends Component {
    * @returns {undefined}
    */
   componentDidMount() {
-    const { fetchReportsFn, isLoggedIn } = this.props;
+    const { fetchReportsFn, fetchingReportsFn, isLoggedIn } = this.props;
     if (isLoggedIn) {
+      fetchingReportsFn();
       fetchReportsFn();
     }
   }
@@ -175,7 +177,8 @@ export class DashboardView extends Component {
       redFlagStats,
       singleReport,
       interventionStats,
-      userData
+      userData,
+      loadingText
     } = this.props;
 
     const {
@@ -279,6 +282,7 @@ export class DashboardView extends Component {
                 </div>
               </div>
               <div className="user-reports">
+                {loadingText && <Spinner loadingText={loadingText} />}
                 <div className="column cards-list">
                   {reportList.length > 0 ? reportList : <EmptyCard reportType={reportTitle} />}
                 </div>
@@ -315,7 +319,8 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
     deleteReportFn: deleteReport,
     deletingReportFn: deletingReport,
     fetchSingleReportFn: fetchSingleReport,
-    fetchingSingleReportFn: fetchingSingleReport
+    fetchingSingleReportFn: fetchingSingleReport,
+    fetchingReportsFn: fetchingReports
   },
   dispatch
 );
@@ -361,6 +366,7 @@ export default connect(
 
 DashboardView.propTypes = {
   fetchReportsFn: func.isRequired,
+  fetchingReportsFn: func.isRequired,
   isLoggedIn: bool.isRequired,
   isAdmin: bool.isRequired,
   loadingText: string.isRequired,

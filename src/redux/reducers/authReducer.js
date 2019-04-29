@@ -21,7 +21,9 @@ const initialState = {
   token: localStorage.userToken || '',
   errors: {},
   loadingText: '',
-  isAdmin: HelperUtils.verifyToken(localStorage.userToken).isadmin
+  isAdmin: localStorage.userToken
+    ? JSON.parse(HelperUtils.verifyToken(localStorage.userToken).isadmin)
+    : false
 };
 
 /**
@@ -61,7 +63,8 @@ const authReducer = (state = initialState, { type, payload }) => {
           phonenumber: payload.phonenumber,
           fullname: `${payload.firstname} ${payload.lastname}`
         },
-        token: payload.token
+        token: payload.token,
+        isAdmin: payload.isAdmin
       };
     case LOGIN_ERROR:
       return {
@@ -83,7 +86,8 @@ const authReducer = (state = initialState, { type, payload }) => {
     case LOGOUT_USER:
       return {
         ...state,
-        isLoggedIn: false
+        isLoggedIn: false,
+        isAdmin: false
       };
     default:
       return state;
