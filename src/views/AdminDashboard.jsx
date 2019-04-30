@@ -13,12 +13,14 @@ import {
   fetchingReports,
   updateReportStatus,
   fetchSingleReport,
-  fetchingSingleReport
+  fetchingSingleReport,
+  updatingStatus
 } from '../redux/actions/reportActions';
 import HelperUtils from '../utils/HelperUtils';
 import Spinner from '../components/Spinner';
 import Modal from '../components/Modal';
 import MapComponent from '../components/MapComponent';
+import Toast from '../components/Toast';
 
 /**
  * @class AdminDashboard
@@ -29,7 +31,8 @@ class AdminDashboard extends Component {
   state = {
     reportType: 'red-flags',
     modalIsOpen: '',
-    reportId: 0
+    reportId: 0,
+    toastShow: 'toast-show'
   };
 
   /**
@@ -56,8 +59,8 @@ class AdminDashboard extends Component {
   };
 
   toggleReportType = (event) => {
-    const { id } = event.target;
-    this.setState({ reportType: id });
+    const { id: reportType } = event.target;
+    this.setState({ reportType });
 
     const { fetchReportsFn } = this.props;
     fetchReportsFn();
@@ -73,16 +76,26 @@ class AdminDashboard extends Component {
     });
   };
 
+  closeToast = () => {
+    this.setState({ toastShow: '' });
+  };
+
   updateReportStatus = (event) => {
     event.preventDefault();
-    const { updateReportStatusFn } = this.props;
-    const { reportType, status, reportId } = this.state;
-    updateReportStatusFn(reportType, reportId, status);
+    this.setState({ toastShow: 'toast-show' });
+    const reportId = event.target.dataset.id;
+    const { updateReportStatusFn, displayLoader } = this.props;
+    const { reportType, status } = this.state;
+    displayLoader();
+    const reportStatus = status || event.target.dataset.status;
+    updateReportStatusFn(reportType, reportId, reportStatus);
+    setTimeout(() => {
+      this.closeToast();
+    }, 5000);
   };
 
   handleStatusChange = (event) => {
-    const reportId = event.target.dataset.id;
-    this.setState({ [event.target.name]: event.target.value, reportId });
+    this.setState({ [event.target.name]: event.target.value });
   };
 
   displaySingleReport = () => {
@@ -141,10 +154,13 @@ class AdminDashboard extends Component {
       redFlagReports,
       interventionReports,
       loadingText,
-      singleReport
+      singleReport,
+      updatedReport
     } = this.props;
 
-    const { reportType, modalIsOpen, reportFetched } = this.state;
+    const {
+      reportType, modalIsOpen, reportFetched, toastShow
+    } = this.state;
 
     const reports = reportType === 'red-flags' ? redFlagReports : interventionReports;
     const reportTitle = reportType === 'red-flags' ? 'red flags' : 'interventions';
@@ -161,7 +177,7 @@ class AdminDashboard extends Component {
     });
 
     const totalReports = totalStats.rejected + totalStats.pending + totalStats.resolved;
-
+    const toastShouldShow = loadingText || updatedReport;
     const reportTable = reports.map((report, index) => (
       <tr key={report.id}>
         <td className="serial">{index + 1}</td>
@@ -179,28 +195,18 @@ class AdminDashboard extends Component {
         </td>
         <td className="time">{HelperUtils.convertUTCTOLocalTime(report.createdat)}</td>
         <td>
-          <form onSubmit={this.updateReportStatus}>
+          <form data-id={report.id} data-status={report.status} onSubmit={this.updateReportStatus}>
             <select
               name="status"
               className="form-element"
               data-id={report.id}
               onChange={this.handleStatusChange}
+              defaultValue={report.status}
             >
-              <option value="drafted" selected={report.status === 'drafted' && 'selected'}>
-                Drafted
-              </option>
-              <option
-                value="investigating"
-                selected={report.status === 'investigating' && 'selected'}
-              >
-                Investigating
-              </option>
-              <option value="resolved" selected={report.status === 'resolved' && 'selected'}>
-                Resolved
-              </option>
-              <option value="rejected" selected={report.status === 'rejected' && 'selected'}>
-                Rejected
-              </option>
+              <option value="drafted">Drafted</option>
+              <option value="investigating">Investigating</option>
+              <option value="resolved">Resolved</option>
+              <option value="rejected">Rejected</option>
             </select>
             <button
               type="submit"
@@ -291,6 +297,21 @@ class AdminDashboard extends Component {
               {reportModalIsOpen && this.displaySingleReport()}
             </Modal>
           )}
+          {toastShouldShow && (
+            <Toast
+              toastClass="toast-primary"
+              toastShow={toastShow}
+              handleCloseToast={this.closeToast}
+              toastMessage={
+                loadingText ? (
+                  <Spinner loadingText={loadingText} />
+                ) : (
+                  'Report status updated successfully'
+                )
+              }
+              closeBtn={!loadingText}
+            />
+          )}
         </main>
         <Footer />
       </Fragment>
@@ -310,7 +331,8 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
     fetchingReportsFn: fetchingReports,
     updateReportStatusFn: updateReportStatus,
     fetchSingleReportFn: fetchSingleReport,
-    fetchingSingleReportFn: fetchingSingleReport
+    fetchingSingleReportFn: fetchingSingleReport,
+    displayLoader: updatingStatus
   },
   dispatch
 );
@@ -329,7 +351,8 @@ export const mapStateToProps = ({ auth, reports }) => {
     redFlagStats,
     interventionStats,
     loadingText,
-    singleReport
+    singleReport,
+    updatedReport
   } = reports;
 
   return {
@@ -340,7 +363,8 @@ export const mapStateToProps = ({ auth, reports }) => {
     interventionReports,
     interventionStats,
     loadingText,
-    singleReport
+    singleReport,
+    updatedReport
   };
 };
 
@@ -355,8 +379,10 @@ AdminDashboard.propTypes = {
   fetchSingleReportFn: func.isRequired,
   fetchingSingleReportFn: func.isRequired,
   updateReportStatusFn: func.isRequired,
+  displayLoader: func.isRequired,
   isLoggedIn: bool.isRequired,
   isAdmin: bool.isRequired,
+  updatedReport: bool.isRequired,
   interventionStats: objectOf.isRequired,
   redFlagStats: objectOf.isRequired,
   interventionReports: objectOf.isRequired,
