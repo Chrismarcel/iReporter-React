@@ -53,7 +53,11 @@ class Header extends Component {
           >
             <span className="hamburger" />
           </button>
-          <ul className={`navbar-menu ${activeHamburgerClass}`}>
+          <ul
+            onClick={this.toggleHamburgerMenu}
+            role="presentation"
+            className={`navbar-menu ${activeHamburgerClass}`}
+          >
             {!isLoggedIn && (
               <Fragment>
                 <MenuLink to="/login" id="login" linkName="Login" />
