@@ -259,7 +259,6 @@ export class DashboardView extends Component {
                 <p className="profile phonenumber">{phonenumber}</p>
                 <p className="profile email">{email}</p>
                 <p className="profile-divider">Reports Statistics</p>
-                <p className="stat-toggle" />
                 <div className="profile-stats">
                   <div className="stats">
                     <p className="stat-value" id="resolved">

@@ -2,6 +2,7 @@ import React, { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
 import { bool, func } from 'prop-types';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import logo from '../assets/img/logo.png';
 import MenuLink from './MenuLink';
 import { logoutUser } from '../redux/actions/authActions';
@@ -29,9 +30,9 @@ class Header extends Component {
     return (
       <header>
         <nav className="navbar">
-          <a href="./" className="navbar-logo">
+          <Link href="./" className="navbar-logo">
             <img className="logo" src={logo} alt="Logo" />
-          </a>
+          </Link>
           <button type="button" className="hamburger-menu">
             <span className="hamburger" />
           </button>

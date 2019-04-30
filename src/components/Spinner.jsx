@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { string } from 'prop-types';
 
 /**
@@ -7,11 +7,10 @@ import { string } from 'prop-types';
  * @returns {JSX} JSX markup
  */
 const Spinner = ({ loadingText }) => (
-  <Fragment>
+  <div className="spinner">
     <i className="fas fa-circle-notch fa-spin" />
-    {'  '}
     <span>{loadingText}</span>
-  </Fragment>
+  </div>
 );
 
 export default Spinner;

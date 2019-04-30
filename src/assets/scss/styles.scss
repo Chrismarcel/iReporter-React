@@ -103,6 +103,21 @@ a.btn {
   border: 2px solid #fffffa;
 }
 
+div > .spinner span {
+  font-size: 20px;
+  margin-top: 5px;
+}
+
+div > .spinner i {
+  line-height: unset; // Remove wobble effect
+  font-size: 25px;
+}
+
+i.fas,
+i.far {
+  margin-right: 10px;
+}
+
 .card {
   padding: 20px;
   border-left: 3px solid #0facf3;
@@ -255,6 +270,11 @@ td.serial {
   margin: 0 auto;
   position: relative;
   margin: 0 5px;
+}
+
+.profile-divider {
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .divider::before,
