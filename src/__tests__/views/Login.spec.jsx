@@ -12,7 +12,7 @@ describe('test Login component', () => {
   const loginComponent = mount(
     <Provider store={store}>
       <Router>
-        <Login />
+        <Login clearAuthErrors={jest.fn()} />
       </Router>
     </Provider>
   );
@@ -35,7 +35,9 @@ describe('test Login component', () => {
 
 describe('test Login component with Errors', () => {
   const mockErrorMsg = { error: 'Incorrect username' };
-  const loginComponent = shallow(<LoginComponent errors={{ error: mockErrorMsg }} />);
+  const loginComponent = shallow(
+    <LoginComponent errors={{ error: mockErrorMsg }} clearAuthErrors={jest.fn()} />
+  );
   it('should error tag is displayed', () => {
     expect(loginComponent.find('p.error').exists()).toBe(true);
   });
