@@ -131,7 +131,10 @@ const reportReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loadingText: '',
+        updatedReport: true,
+        interventionReports: payload.interventions,
         interventionStats: payload.interventionStats,
+        redFlagReports: payload.redFlags,
         redFlagStats: payload.redFlagStats
       };
     case UPDATING_STATUS:

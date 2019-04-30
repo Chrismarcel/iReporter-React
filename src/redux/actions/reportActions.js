@@ -16,7 +16,8 @@ import {
   DELETE_REPORT_ERROR,
   FETCHING_SINGLE_REPORT,
   UPDATE_STATUS,
-  UPDATE_STATUS_ERROR
+  UPDATE_STATUS_ERROR,
+  UPDATING_STATUS
 } from '../actionTypes';
 import BASE_URL from '../../config';
 
@@ -255,6 +256,14 @@ const fetchingSingleReport = () => ({
   type: FETCHING_SINGLE_REPORT
 });
 
+/**
+ * @method updatingStatus
+ * @returns {object} action object
+ */
+const updatingStatus = () => ({
+  type: UPDATING_STATUS
+});
+
 export {
   createReport,
   publishingReport,
@@ -266,5 +275,6 @@ export {
   updatingReport,
   deleteReport,
   deletingReport,
-  updateReportStatus
+  updateReportStatus,
+  updatingStatus
 };

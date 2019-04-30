@@ -104,13 +104,17 @@ a.btn {
 }
 
 div > .spinner span {
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 5px;
 }
 
 div > .spinner i {
   line-height: unset; // Remove wobble effect
-  font-size: 25px;
+  font-size: 20px;
+}
+
+.admin-table > .spinner {
+  margin-top: 20px;
 }
 
 i.fas,
@@ -801,7 +805,7 @@ div.report-type {
 
 /* Toast */
 .toast {
-  top: 50px;
+  top: 80px;
   right: 50%;
   transform: translateX(50%);
   position: fixed;
@@ -830,6 +834,7 @@ div.report-type {
 
 .toast-message {
   display: inline-block;
+  font-size: 18px;
 }
 
 .toast-hide {
@@ -838,7 +843,7 @@ div.report-type {
   font-size: 2.5em;
   position: absolute;
   right: 15px;
-  top: 2px;
+  top: 5px;
 }
 
 /* Reports Table */
@@ -1179,7 +1184,8 @@ tr > td:last-child {
   }
 
   .toast {
-    width: 75%;
+    width: 90%;
+    top: 95px;
   }
 }
 
