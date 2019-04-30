@@ -14,10 +14,19 @@ import { logoutUser } from '../redux/actions/authActions';
  * @returns {JSX} JSX Markup
  */
 class Header extends Component {
+  state = {
+    menuOpen: false
+  };
+
   handleUserLogout = (event) => {
     event.preventDefault();
     const { logoutUserFn } = this.props;
     logoutUserFn();
+  };
+
+  toggleHamburgerMenu = () => {
+    const { menuOpen } = this.state;
+    this.setState({ menuOpen: !menuOpen });
   };
 
   /**
@@ -27,16 +36,24 @@ class Header extends Component {
    */
   render() {
     const { isLoggedIn, isAdmin } = this.props;
+    const { menuOpen } = this.state;
+
+    const activeHamburgerClass = menuOpen ? 'menu-open' : '';
+
     return (
       <header>
         <nav className="navbar">
-          <Link href="./" className="navbar-logo">
+          <Link to="./" className="navbar-logo">
             <img className="logo" src={logo} alt="Logo" />
           </Link>
-          <button type="button" className="hamburger-menu">
+          <button
+            type="button"
+            onClick={this.toggleHamburgerMenu}
+            className={`hamburger-menu ${activeHamburgerClass}`}
+          >
             <span className="hamburger" />
           </button>
-          <ul className="navbar-menu">
+          <ul className={`navbar-menu ${activeHamburgerClass}`}>
             {!isLoggedIn && (
               <Fragment>
                 <MenuLink to="/login" id="login" linkName="Login" />

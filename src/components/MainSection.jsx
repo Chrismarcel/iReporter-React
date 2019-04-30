@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, BrowserRouter as Router } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 /**
  * @method MainSection
@@ -15,12 +15,10 @@ const HeroSection = () => (
       platform, you can also view reports and interventions created by other users.
     </p>
     <div className="hero-cta">
-      <Router>
-        <Link className="btn btn-white" to="/create-report">
-          {'Get Started '}
-          <i className="fas fa-arrow-right" />
-        </Link>
-      </Router>
+      <Link className="btn btn-white" to="/create-report">
+        {'Get Started '}
+        <i className="fas fa-arrow-right" />
+      </Link>
     </div>
   </section>
 );
