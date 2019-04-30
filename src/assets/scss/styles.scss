@@ -436,7 +436,7 @@ section > .btn {
 .section-title::after {
   content: "";
   position: absolute;
-  bottom: -3px;
+  bottom: -10px;
   left: 0;
   width: 60px;
   border: 1.5px solid #0facf3;
@@ -805,7 +805,7 @@ div.report-type {
 
 /* Toast */
 .toast {
-  top: 80px;
+  top: 50px;
   right: 50%;
   transform: translateX(50%);
   position: fixed;
@@ -1185,7 +1185,6 @@ tr > td:last-child {
 
   .toast {
     width: 90%;
-    top: 95px;
   }
 }
 
