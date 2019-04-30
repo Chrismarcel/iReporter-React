@@ -8,9 +8,17 @@ import {
 import { Link, Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { fetchReports, fetchingReports, updateReportStatus } from '../redux/actions/reportActions';
+import {
+  fetchReports,
+  fetchingReports,
+  updateReportStatus,
+  fetchSingleReport,
+  fetchingSingleReport
+} from '../redux/actions/reportActions';
 import HelperUtils from '../utils/HelperUtils';
 import Spinner from '../components/Spinner';
+import Modal from '../components/Modal';
+import MapComponent from '../components/MapComponent';
 
 /**
  * @class AdminDashboard
@@ -19,7 +27,9 @@ import Spinner from '../components/Spinner';
  */
 class AdminDashboard extends Component {
   state = {
-    reportType: 'red-flags'
+    reportType: 'red-flags',
+    modalIsOpen: '',
+    reportId: 0
   };
 
   /**
@@ -36,12 +46,31 @@ class AdminDashboard extends Component {
     }
   }
 
+  closeModal = () => {
+    this.setState({ modalIsOpen: '', reportFetched: false });
+  };
+
+  toggleModal = (event) => {
+    event.preventDefault();
+    this.setState({ reportId: event.target.id, modalIsOpen: 'modal-open' });
+  };
+
   toggleReportType = (event) => {
     const { id } = event.target;
     this.setState({ reportType: id });
 
     const { fetchReportsFn } = this.props;
     fetchReportsFn();
+  };
+
+  // Retrieve single report content from the network
+  handleFetchSingleReport = () => {
+    const { fetchSingleReportFn, fetchingSingleReportFn } = this.props;
+    const { reportType, reportId } = this.state;
+    fetchingSingleReportFn();
+    fetchSingleReportFn(reportType, reportId).then(() => {
+      this.setState({ reportFetched: true });
+    });
   };
 
   updateReportStatus = (event) => {
@@ -54,6 +83,48 @@ class AdminDashboard extends Component {
   handleStatusChange = (event) => {
     const reportId = event.target.dataset.id;
     this.setState({ [event.target.name]: event.target.value, reportId });
+  };
+
+  displaySingleReport = () => {
+    const { singleReport, loadingText } = this.props;
+    return (
+      <div className="modal-body">
+        {loadingText && <Spinner loadingText={loadingText} />}
+        {singleReport.images[0] && !loadingText && (
+          <div className="modal-group modal-images">
+            <img
+              src={`https://res.cloudinary.com/myopinion-ng/image/upload/v1548601936/iReporter/${
+                singleReport.images[0]
+              }`}
+              alt="Report thumbnail"
+            />
+          </div>
+        )}
+
+        {!loadingText && (
+          <Fragment>
+            <div className="modal-comment">
+              <p>{singleReport.comment}</p>
+            </div>
+            <p className="report-time">
+              <i className="icon icon-blue fas fa-clock" />
+              {' '}
+              {HelperUtils.convertUTCTOLocalTime(singleReport.createdat)}
+            </p>
+            <p className="report-location">
+              <i className="icon icon-blue fas fa-map-marker-alt" />
+              {' '}
+              {`${singleReport.latitude}, ${singleReport.longitude}`}
+            </p>
+            <div className="map-container">
+              <div id="map">
+                <MapComponent lat={singleReport.latitude} lng={singleReport.longitude} />
+              </div>
+            </div>
+          </Fragment>
+        )}
+      </div>
+    );
   };
 
   /**
@@ -69,13 +140,16 @@ class AdminDashboard extends Component {
       isLoggedIn,
       redFlagReports,
       interventionReports,
-      loadingText
+      loadingText,
+      singleReport
     } = this.props;
 
-    const { reportType } = this.state;
+    const { reportType, modalIsOpen, reportFetched } = this.state;
 
     const reports = reportType === 'red-flags' ? redFlagReports : interventionReports;
     const reportTitle = reportType === 'red-flags' ? 'red flags' : 'interventions';
+
+    const reportModalIsOpen = Object.keys(singleReport).length > 0;
 
     // Sum total reports statistics
     const totalStats = { resolved: 0, pending: 0, rejected: 0 };
@@ -92,11 +166,15 @@ class AdminDashboard extends Component {
       <tr key={report.id}>
         <td className="serial">{index + 1}</td>
         <td className="comment">
-          <p data-type="red-flag" data-id={report.id}>
-            {report.comment}
-          </p>
-          <Link to="./articles/report-type/id" className="expand-report">
-            View Details
+          <p>{report.comment}</p>
+          <Link
+            id={report.id}
+            to="./articles/report-type/id"
+            data-type={report.type}
+            className="expand-report"
+            onClick={this.toggleModal}
+          >
+            View Report Details
           </Link>
         </td>
         <td className="time">{HelperUtils.convertUTCTOLocalTime(report.createdat)}</td>
@@ -203,6 +281,16 @@ class AdminDashboard extends Component {
               </div>
             </div>
           </section>
+          {modalIsOpen && (
+            <Modal
+              closeModal={this.closeModal}
+              title="Report Details"
+              modalClass={`report-modal ${modalIsOpen}`}
+            >
+              {!reportFetched && this.handleFetchSingleReport()}
+              {reportModalIsOpen && this.displaySingleReport()}
+            </Modal>
+          )}
         </main>
         <Footer />
       </Fragment>
@@ -220,7 +308,9 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
   {
     fetchReportsFn: fetchReports,
     fetchingReportsFn: fetchingReports,
-    updateReportStatusFn: updateReportStatus
+    updateReportStatusFn: updateReportStatus,
+    fetchSingleReportFn: fetchSingleReport,
+    fetchingSingleReportFn: fetchingSingleReport
   },
   dispatch
 );
@@ -238,7 +328,8 @@ export const mapStateToProps = ({ auth, reports }) => {
     interventionReports,
     redFlagStats,
     interventionStats,
-    loadingText
+    loadingText,
+    singleReport
   } = reports;
 
   return {
@@ -248,7 +339,8 @@ export const mapStateToProps = ({ auth, reports }) => {
     redFlagStats,
     interventionReports,
     interventionStats,
-    loadingText
+    loadingText,
+    singleReport
   };
 };
 
@@ -260,6 +352,8 @@ export default connect(
 AdminDashboard.propTypes = {
   fetchReportsFn: func.isRequired,
   fetchingReportsFn: func.isRequired,
+  fetchSingleReportFn: func.isRequired,
+  fetchingSingleReportFn: func.isRequired,
   updateReportStatusFn: func.isRequired,
   isLoggedIn: bool.isRequired,
   isAdmin: bool.isRequired,
@@ -267,5 +361,6 @@ AdminDashboard.propTypes = {
   redFlagStats: objectOf.isRequired,
   interventionReports: objectOf.isRequired,
   redFlagReports: objectOf.isRequired,
+  singleReport: objectOf.isRequired,
   loadingText: string.isRequired
 };

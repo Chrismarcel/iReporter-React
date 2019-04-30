@@ -18,6 +18,15 @@ import { registerAction, processingRequest, clearErrors } from '../redux/actions
  * @param {object} event - Synthetic event object
  */
 export class SignUpComponent extends Component {
+  /**
+   * @method componentDidMount
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    const { clearAuthErrors } = this.props;
+    clearAuthErrors();
+  }
+
   inputChangeHandler = (event) => {
     const { clearAuthErrors } = this.props;
     clearAuthErrors();
