@@ -9,11 +9,21 @@ describe('test Dashboard component', () => {
       isLoggedIn
       redFlagStats={{ reportStatus: { resolved: 0, rejected: 0, pending: 0 } }}
       interventionStats={{ reportStatus: { resolved: 0, rejected: 0, pending: 0 } }}
-      redFlagReports={[]}
-      interventionReports={[]}
+      redFlagReports={[{ createdat: new Date() }]}
+      interventionReports={[{ createdat: new Date() }]}
       fetchReportsFn={jest.fn()}
       fetchingReportsFn={jest.fn()}
-      singleReport={{ id: 3, comment: 'This is a test comment' }}
+      fetchSingleReportFn={jest.fn()}
+      fetchingSingleReportFn={jest.fn()}
+      deletingReportFn={jest.fn()}
+      deleteReportFn={jest.fn()}
+      loadingText="Fetching reports"
+      singleReport={{
+        id: 3,
+        comment: 'This is a test comment',
+        images: ['demo.jpg'],
+        createdat: new Date()
+      }}
       userData={{
         email: 'mockemail@gmail.com',
         username: 'MockUsername',
@@ -25,5 +35,27 @@ describe('test Dashboard component', () => {
 
   it('should ensure that header exists', () => {
     expect(dashboardComponent.find('.section-title').text()).toEqual('Dashboard');
+  });
+
+  it('should trigger the necessary functions when passed the correct props', () => {
+    dashboardComponent.instance().handleFetchSingleReport();
+    dashboardComponent.instance().displaySingleReport();
+    dashboardComponent.instance().closeModal({ target: { id: 1 } });
+    dashboardComponent.instance().displayDeleteModal();
+    dashboardComponent.instance().handleDeleteReport();
+    dashboardComponent.instance().toggleReportType({ target: { id: 'interventions' } });
+    dashboardComponent.instance().toggleModal({
+      preventDefault: jest.fn(),
+      target: { id: 1, dataset: { type: 'interventions' } }
+    });
+    dashboardComponent.setProps({ isAdmin: true, loadingText: false, isLoggedIn: false });
+    dashboardComponent.setProps({
+      redFlagStats: { resolved: 0, rejected: 0, pending: 0 },
+      interventionStats: { resolved: 0, rejected: 0, pending: 0 },
+      loadingText: false
+    });
+    dashboardComponent.setState({ reportType: 'interventions', modalType: 'delete' });
+    dashboardComponent.setProps({ loadingText: '', singleReport: { images: ['demo.jpg'] } });
+    dashboardComponent.update();
   });
 });

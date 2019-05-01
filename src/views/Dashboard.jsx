@@ -57,24 +57,22 @@ export class DashboardView extends Component {
     this.setState({ modalIsOpen: '', modalType: '', reportFetched: false });
   };
 
-  handleDeleteReport = () => {
+  handleDeleteReport = async () => {
     const { reportId, reportType } = this.state;
     const { deleteReportFn, deletingReportFn, fetchReportsFn } = this.props;
     fetchReportsFn();
     deletingReportFn();
-    deleteReportFn(reportType, reportId).then(() => {
-      this.setState({ modalIsOpen: '', modalType: '' });
-    });
+    await deleteReportFn(reportType, reportId);
+    this.setState({ modalIsOpen: '', modalType: '' });
   };
 
   // Retrieve single report content from the network
-  handleFetchSingleReport = () => {
+  handleFetchSingleReport = async () => {
     const { fetchSingleReportFn, fetchingSingleReportFn } = this.props;
     const { reportType, reportId } = this.state;
     fetchingSingleReportFn();
-    fetchSingleReportFn(reportType, reportId).then(() => {
-      this.setState({ reportFetched: true });
-    });
+    await fetchSingleReportFn(reportType, reportId);
+    this.setState({ reportFetched: true });
   };
 
   // Display contents of the modal

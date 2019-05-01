@@ -88,10 +88,13 @@ export class CreateReportComponent extends Component {
     });
   };
 
+  // For testing purposes
+  getUserLocation = (pos) => {
+    this.setState({ location: `${pos.coords.latitude}, ${pos.coords.longitude}` });
+  };
+
   retrieveLocation = () => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      this.setState({ location: `${pos.coords.latitude}, ${pos.coords.longitude}` });
-    });
+    navigator.geolocation.getCurrentPosition(this.getUserLocation);
   };
 
   /**

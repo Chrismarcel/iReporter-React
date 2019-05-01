@@ -17,7 +17,6 @@ describe('test Landing Page component', () => {
     </Provider>
   );
   it('should ensure that header, main section and footer components exist', () => {
-    expect(landingPage.find('Header').exists()).toBe(true);
     expect(landingPage.find('MainSection').exists()).toBe(true);
     expect(landingPage.find('Footer').exists()).toBe(true);
   });

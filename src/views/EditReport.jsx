@@ -95,10 +95,13 @@ export class EditReportComponent extends Component {
     });
   };
 
+  // For testing purposes
+  getUserLocation = (pos) => {
+    this.setState({ location: `${pos.coords.latitude}, ${pos.coords.longitude}` });
+  };
+
   retrieveLocation = () => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      this.setState({ location: `${pos.coords.latitude}, ${pos.coords.longitude}` });
-    });
+    navigator.geolocation.getCurrentPosition(this.getUserLocation);
   };
 
   /**
@@ -169,7 +172,7 @@ export class EditReportComponent extends Component {
                 {location && `Selected location coordinates are ${location}`}
               </p>
               <button type="submit" className="btn btn-primary">
-                {loadingText ? <Spinner loadingText={loadingText} /> : 'Update Record'}
+                {loadingText ? <Spinner loadingText={loadingText} /> : 'Update Report'}
               </button>
             </form>
           </section>

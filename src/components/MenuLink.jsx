@@ -32,6 +32,13 @@ MenuLink.propTypes = {
   handleClick: func
 };
 
+/**
+ * @method defaultHandleClick
+ * @description default method to be triggered if no method is specified in the props
+ * @returns {undefined}
+ */
+export const defaultHandleClick = () => {};
+
 MenuLink.defaultProps = {
-  handleClick: () => {}
+  handleClick: defaultHandleClick
 };
