@@ -67,11 +67,11 @@ export class DashboardView extends Component {
   };
 
   // Retrieve single report content from the network
-  handleFetchSingleReport = async () => {
+  handleFetchSingleReport = () => {
     const { fetchSingleReportFn, fetchingSingleReportFn } = this.props;
     const { reportType, reportId } = this.state;
     fetchingSingleReportFn();
-    await fetchSingleReportFn(reportType, reportId);
+    fetchSingleReportFn(reportType, reportId);
     this.setState({ reportFetched: true });
   };
 

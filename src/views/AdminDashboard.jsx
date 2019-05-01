@@ -69,12 +69,12 @@ export class AdminDashboardView extends Component {
   };
 
   // Retrieve single report content from the network
-  handleFetchSingleReport = async () => {
+  handleFetchSingleReport = () => {
     const { fetchSingleReportFn, fetchingSingleReportFn } = this.props;
     const { reportType, reportId } = this.state;
     fetchingSingleReportFn();
     fetchSingleReportFn(reportType, reportId);
-    await this.setState({ reportFetched: true, loadedTable: true });
+    this.setState({ reportFetched: true, loadedTable: true });
   };
 
   closeToast = () => {
