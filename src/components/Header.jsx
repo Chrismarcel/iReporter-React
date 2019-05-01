@@ -13,7 +13,7 @@ import { logoutUser } from '../redux/actions/authActions';
  * @description Header component
  * @returns {JSX} JSX Markup
  */
-class Header extends Component {
+export class HeaderComponent extends Component {
   state = {
     menuOpen: false
   };
@@ -76,12 +76,7 @@ class Header extends Component {
               </Fragment>
             )}
             {isLoggedIn && (
-              <MenuLink
-                to="/logout"
-                id="signup"
-                linkName="Logout"
-                handleClick={this.handleUserLogout}
-              />
+              <MenuLink to="/logout" linkName="Logout" handleClick={this.handleUserLogout} />
             )}
           </ul>
         </nav>
@@ -116,9 +111,9 @@ export const mapDispatchToProps = dispatch => bindActionCreators(
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Header);
+)(HeaderComponent);
 
-Header.propTypes = {
+HeaderComponent.propTypes = {
   isLoggedIn: bool.isRequired,
   isAdmin: bool.isRequired,
   logoutUserFn: func.isRequired

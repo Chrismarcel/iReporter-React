@@ -4,6 +4,11 @@ import 'regenerator-runtime';
 import { CreateReportComponent } from '../../views/CreateReport';
 
 describe('test Create Report component', () => {
+  const mockGeolocation = {
+    getCurrentPosition: jest.fn()
+  };
+  global.navigator.geolocation = mockGeolocation;
+
   const mockFn = jest.fn();
   const createReportComponent = shallow(
     <CreateReportComponent
@@ -56,16 +61,24 @@ describe('test Create Report component', () => {
     createReportComponent.update();
   });
 
-  it('should trigger the geolocation function', () => {
-    const locationBtn = createReportComponent.find('.current-location');
-    const mockGeolocation = {
-      getCurrentPosition: jest.fn()
-    };
-    global.navigator.geolocation = mockGeolocation;
-    locationBtn.simulate('click', {
-      preventDefault: mockFn,
-      target: { name: 'comment', value: 'Some random text' }
+  it('should trigger the necessary functions when passed the correct props', () => {
+    createReportComponent.instance().geocodeLocation({ target: { value: 'Mock location' } });
+    createReportComponent
+      .instance()
+      .getUserLocation({ coords: { latitude: 4.5758484, longitude: 9.758575 } });
+    createReportComponent.instance().handleSelectSuggest({
+      geometry: { location: { lat: jest.fn(), lng: jest.fn() } },
+      formatted_address: 'Mock address'
     });
-    createReportComponent.setState({ location: '4.893993093, 7.8373773' });
+    createReportComponent.setProps({
+      isAdmin: false,
+      isLoggedIn: false,
+      loadingText: false,
+      publishedReport: true
+    });
+    createReportComponent.setProps({
+      isAdmin: true,
+      isLoggedIn: true
+    });
   });
 });

@@ -27,12 +27,13 @@ import Toast from '../components/Toast';
  * @description AdminDashboard component
  * @param {object} event - Synthetic event object
  */
-class AdminDashboard extends Component {
+export class AdminDashboardView extends Component {
   state = {
     reportType: 'red-flags',
     modalIsOpen: '',
     reportId: 0,
-    toastShow: 'toast-show'
+    toastShow: 'toast-show',
+    loadedTable: false
   };
 
   /**
@@ -46,6 +47,7 @@ class AdminDashboard extends Component {
     if (isLoggedIn && isAdmin) {
       fetchingReportsFn();
       fetchReportsFn();
+      this.setState({ loadedTable: true });
     }
   }
 
@@ -67,17 +69,21 @@ class AdminDashboard extends Component {
   };
 
   // Retrieve single report content from the network
-  handleFetchSingleReport = () => {
+  handleFetchSingleReport = async () => {
     const { fetchSingleReportFn, fetchingSingleReportFn } = this.props;
     const { reportType, reportId } = this.state;
     fetchingSingleReportFn();
-    fetchSingleReportFn(reportType, reportId).then(() => {
-      this.setState({ reportFetched: true });
-    });
+    fetchSingleReportFn(reportType, reportId);
+    await this.setState({ reportFetched: true, loadedTable: true });
   };
 
   closeToast = () => {
     this.setState({ toastShow: '' });
+  };
+
+  // For testing purposes
+  triggerCloseToast = () => {
+    this.closeToast();
   };
 
   updateReportStatus = (event) => {
@@ -89,9 +95,7 @@ class AdminDashboard extends Component {
     displayLoader();
     const reportStatus = status || event.target.dataset.status;
     updateReportStatusFn(reportType, reportId, reportStatus);
-    setTimeout(() => {
-      this.closeToast();
-    }, 5000);
+    setTimeout(this.triggerCloseToast, 5000);
   };
 
   handleStatusChange = (event) => {
@@ -102,7 +106,6 @@ class AdminDashboard extends Component {
     const { singleReport, loadingText } = this.props;
     return (
       <div className="modal-body">
-        {loadingText && <Spinner loadingText={loadingText} />}
         {singleReport.images[0] && !loadingText && (
           <div className="modal-group modal-images">
             <img
@@ -159,7 +162,7 @@ class AdminDashboard extends Component {
     } = this.props;
 
     const {
-      reportType, modalIsOpen, reportFetched, toastShow
+      reportType, modalIsOpen, reportFetched, toastShow, loadedTable
     } = this.state;
 
     const reports = reportType === 'red-flags' ? redFlagReports : interventionReports;
@@ -185,7 +188,7 @@ class AdminDashboard extends Component {
           <p>{report.comment}</p>
           <Link
             id={report.id}
-            to="./articles/report-type/id"
+            to={`./articles/${report.type}/${report.id}`}
             data-type={report.type}
             className="expand-report"
             onClick={this.toggleModal}
@@ -270,8 +273,10 @@ class AdminDashboard extends Component {
             </div>
             <div className="dashboard">
               <div className="admin-table">
-                {loadingText && <Spinner loadingText={loadingText || 'Fetching Reports...'} />}
-                {!loadingText && (
+                {loadingText && !loadedTable && (
+                  <Spinner loadingText={loadingText || 'Fetching Reports...'} />
+                )}
+                {loadedTable && (
                   <table className="stats-table">
                     <tbody>
                       <tr>
@@ -371,9 +376,9 @@ export const mapStateToProps = ({ auth, reports }) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AdminDashboard);
+)(AdminDashboardView);
 
-AdminDashboard.propTypes = {
+AdminDashboardView.propTypes = {
   fetchReportsFn: func.isRequired,
   fetchingReportsFn: func.isRequired,
   fetchSingleReportFn: func.isRequired,

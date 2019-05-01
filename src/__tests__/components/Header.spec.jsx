@@ -1,15 +1,11 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
-import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
-import ReduxPromise from 'redux-promise';
-import { BrowserRouter as Router } from 'react-router-dom';
-import reducers from '../../redux/reducers';
-import Header from '../../components/Header';
-import MenuLink from '../../components/MenuLink';
+import { shallow } from 'enzyme';
+import { HeaderComponent } from '../../components/Header';
+import MenuLink, { defaultHandleClick } from '../../components/MenuLink';
 import logo from '../../assets/img/logo.png';
 
 describe('Menu links component should be rendered', () => {
+  defaultHandleClick();
   const menuLinksComponent = shallow(<MenuLink id="login" location="/login" linkName="Login" />);
 
   it('should ensure menu links are present', () => {
@@ -17,16 +13,9 @@ describe('Menu links component should be rendered', () => {
   });
 });
 
-const store = createStore(reducers, applyMiddleware(ReduxPromise));
+// const store = createStore(reducers, applyMiddleware(ReduxPromise));
 describe('Header component should be rendered', () => {
-  const headerComponent = mount(
-    <Provider store={store}>
-      <Router>
-        <Header />
-      </Router>
-    </Provider>
-  );
-
+  const headerComponent = shallow(<HeaderComponent isLoggedIn logoutUserFn={jest.fn()} />);
   it('should ensure header tag is present', () => {
     expect(headerComponent.find('header').exists()).toBe(true);
   });
@@ -49,5 +38,17 @@ describe('Header component should be rendered', () => {
 
   it('should ensure menu links are present', () => {
     expect(headerComponent.find('.navbar-menu').exists()).toBe(true);
+  });
+
+  it('should trigger logout function when logout is clicked', () => {
+    headerComponent.instance().handleUserLogout({ preventDefault: jest.fn() });
+  });
+
+  it('should toggle hamburger menu', () => {
+    headerComponent.find('.hamburger-menu').simulate('click');
+  });
+
+  it('should handle menu link for Admin', () => {
+    headerComponent.setProps({ isAdmin: true });
   });
 });
